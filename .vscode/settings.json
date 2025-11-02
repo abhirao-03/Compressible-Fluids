@@ -25,6 +25,13 @@
         "string_view": "cpp",
         "typeinfo": "cpp",
         "algorithm": "cpp",
-        "ratio": "cpp"
+        "ratio": "cpp",
+        "fstream": "cpp",
+        "complex": "cpp",
+        "__hash_table": "cpp",
+        "bitset": "cpp",
+        "queue": "cpp",
+        "stack": "cpp",
+        "unordered_map": "cpp"
     }
 }
