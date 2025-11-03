@@ -1,3 +1,4 @@
+#include <iostream>
 #include "simulation.h"
 
 int main(){
@@ -8,10 +9,11 @@ int main(){
     double ADVCOEFF = 1.0;
     int NUMPOINTS = 100;
     int NUMGHOST = 2;
-    int INITCOND = 1;
+    int INITCOND;
     int DIFFMETHOD = 1;
     double RELAXATION = 1.0;
 
+    std::cin >> INITCOND;
 
     Simulation DownwindSin(X0, X1, T0, TEND, ADVCOEFF, NUMPOINTS, NUMGHOST, INITCOND, DIFFMETHOD, RELAXATION);
     DownwindSin.PerformTimeSteps();
