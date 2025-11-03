@@ -10,7 +10,7 @@ int main(){
     int NUMPOINTS = 100;
     int NUMGHOST = 2;
     int INITCOND;
-    int DIFFMETHOD = 1;
+    Simulation::DifferenceMethod DIFFMETHOD = Simulation::DifferenceMethod::CENTRAL;
     double RELAXATION = 1.0;
 
     std::cin >> INITCOND;

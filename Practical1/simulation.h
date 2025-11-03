@@ -15,7 +15,6 @@ class Simulation{
         int m_iNumGhostCells;
 
         int m_iInitialCondition;
-        int m_iDifferenceMethod;
 
         double m_dDeltaX = (m_dXStart - m_dXEnd) / m_iNumPoints;
         double m_dRelaxation;
@@ -23,8 +22,16 @@ class Simulation{
 
         std::vector<double> m_vec_dU;
         std::vector<double> m_vec_dUNext;
-
+    
     public:
+        enum DifferenceMethod
+        {
+            BACKWARD = 1,
+            FORWARD = 2,
+            CENTRAL = 3
+        };
+        DifferenceMethod m_eDifferenceMethod;
+
         // member initialization
         Simulation(
                     double dxStart,
@@ -35,7 +42,7 @@ class Simulation{
                     int iNumPoints,
                     int iNumGhostCells,
                     int iInitialCondition,
-                    int iDifferenceMethod,
+                    DifferenceMethod eDifferenceMethod,
                     double dRelaxation)
             : 
             m_dXStart(dxStart),
@@ -46,7 +53,7 @@ class Simulation{
             m_iNumPoints(iNumPoints),
             m_iNumGhostCells(iNumGhostCells),
             m_iInitialCondition(iInitialCondition),
-            m_iDifferenceMethod(iDifferenceMethod),
+            m_eDifferenceMethod(eDifferenceMethod),
             m_dRelaxation(dRelaxation)
             {
                 m_dDeltaX = (m_dXEnd - m_dXStart) / m_iNumPoints;
@@ -80,7 +87,40 @@ class Simulation{
             }
         }
 
-        void PerformTimeSteps(){
+        void BackwardDifference(const std::vector<double>& vec_dOldU, std::vector<double>& vec_dNewU, const int& i_IndexUpdate)
+        {
+            vec_dNewU[i_IndexUpdate] = vec_dOldU[i_IndexUpdate] - m_dAdvectionCoefficient * (m_dDeltaT/m_dDeltaX) * (vec_dOldU[i_IndexUpdate] - vec_dOldU[i_IndexUpdate - 1]); 
+        }
+
+        void ForwardDifference(const std::vector<double>& vec_dOldU, std::vector<double>& vec_dNewU, const int& i_IndexUpdate)
+        {
+            vec_dNewU[i_IndexUpdate] = vec_dOldU[i_IndexUpdate] - m_dAdvectionCoefficient * (m_dDeltaT/m_dDeltaX) * (vec_dOldU[i_IndexUpdate + 1] - vec_dOldU[i_IndexUpdate]);
+        }
+
+        void CentralDifference(const std::vector<double>& vec_dOldU, std::vector<double>& vec_dNewU, const int& i_IndexUpdate)
+        {
+            vec_dNewU[i_IndexUpdate] = vec_dOldU[i_IndexUpdate] - m_dAdvectionCoefficient * (m_dDeltaT/m_dDeltaX) * (1.0/2.0) * (vec_dOldU[i_IndexUpdate + 1] - vec_dOldU[i_IndexUpdate - 1]);
+        }
+
+        void PerformTimeSteps()
+        {
+            void (Simulation::*difference)(const std::vector<double>&, std::vector<double>&, const int&);
+
+        switch (m_eDifferenceMethod)
+        {
+            case DifferenceMethod::BACKWARD:
+                difference = &Simulation::BackwardDifference;
+                break;
+
+            case DifferenceMethod::FORWARD:
+                difference = &Simulation::ForwardDifference;
+                break;
+
+            case DifferenceMethod::CENTRAL:
+                difference = &Simulation::ForwardDifference;
+                break;
+        }
+
             SetInitialCondition();
             std::ofstream output("advectionResults.dat");
 
@@ -98,14 +138,14 @@ class Simulation{
                 for (int i = 1; i <= m_iNumPoints; i++)
                 {
                     double d_CurrentX = m_dXStart + (i - 1) * m_dDeltaX;
-                    m_vec_dUNext[i] = m_vec_dU[i] - m_dAdvectionCoefficient * (m_dDeltaT/m_dDeltaX) * (m_vec_dU[i] - m_vec_dU[i - 1]);
+                    (this->*difference)(m_vec_dU, m_vec_dUNext, i);
 
                     output << d_CurrentX << ' ' << m_vec_dU[i] << std::endl;
-
                 }
+
                 output << "\n\n";
                 m_vec_dU = m_vec_dUNext;
+
             } while (d_Time < m_dTimeEnd);
         }
-
 };
