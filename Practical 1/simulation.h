@@ -49,15 +49,15 @@ class Simulation{
             m_iDifferenceMethod(iDifferenceMethod),
             m_dRelaxation(dRelaxation)
             {
-                m_dDeltaX = (m_dXStart - m_dXEnd) / m_iNumPoints;
+                m_dDeltaX = (m_dXEnd - m_dXStart) / m_iNumPoints;
                 m_dDeltaT = m_dRelaxation * m_dDeltaX;
                 m_vec_dU.resize(m_iNumGhostCells + m_iNumPoints + 1);
                 m_vec_dUNext.resize(m_iNumGhostCells + m_iNumPoints + 1);
             }
 
-        void SetInitialCondition(const int& initial_condition){
+        void SetInitialCondition(){
 
-            if (initial_condition == 1)
+            if (m_iInitialCondition == 1)
             {
                     for (int i = 0; i < m_vec_dU.size(); i++)
                     {
@@ -80,8 +80,8 @@ class Simulation{
             }
         }
 
-        void PerformTimeSteps(const int& InitialCondition){
-            SetInitialCondition(InitialCondition);
+        void PerformTimeSteps(){
+            SetInitialCondition();
             std::ofstream output("advectionResults.dat");
 
             double d_Time = m_dTimeStart;
@@ -90,8 +90,10 @@ class Simulation{
             {
                 d_Time += m_dDeltaT;
 
-                m_vec_dU[0] = m_vec_dU[1];
-                m_vec_dU[m_iNumPoints + m_iNumGhostCells] = m_vec_dU[m_iNumPoints + m_iNumGhostCells - 1];
+                m_vec_dU[0] = m_vec_dU[m_iNumPoints + 1];
+                m_vec_dU[m_iNumPoints + 2] = m_vec_dU[1];
+                
+                output << "# time = " << d_Time << std::endl;
 
                 for (int i = 1; i <= m_iNumPoints; i++)
                 {
@@ -102,7 +104,7 @@ class Simulation{
 
                 }
                 output << "\n\n";
-
+                m_vec_dU = m_vec_dUNext;
             } while (d_Time < m_dTimeEnd);
         }
 
