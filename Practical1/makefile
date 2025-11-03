@@ -1,3 +1,6 @@
+clean-meta :
+	rm *.dat *.out *.h.pch
+
 clean :
 	rm *.dat *.out *.h.pch *.gif
 
