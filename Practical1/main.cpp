@@ -2,24 +2,25 @@
 #include "simulation.h"
 
 int main(){
-    double X0 = 0.0;
-    double X1 = 1.0;
+    double u_X0 = 0.0;
+    double u_X1 = 1.0;
     
-    double ADVCOEFF = 1.0;
+    double u_ADVCOEFF = 1.0;
     
-    double TEND = 1.0;
-    double T0 = 0.0;
+    double u_TEND = 1.0;
+    double u_T0 = 0.0;
     
-    int NUMPOINTS = 400;
-    int NUMGHOST = 2;
-    int INITCOND;
+    int u_NUMPOINTS = 400;
+    int u_NUMGHOST = 2;
+    double u_RELAXATION = 0.9;
 
-    Simulation::DifferenceMethod DIFFMETHOD = Simulation::DifferenceMethod::BACKWARD;
-    double RELAXATION = 0.9;
+    int u_iInitialCondition;
+    std::cin >> u_iInitialCondition;
+    
+    Simulation::DifferenceMethod u_eDifferenceMethod = Simulation::DifferenceMethod::BACKWARD;
+    Simulation::InitialCondition u_eInitialCondition = static_cast<Simulation::InitialCondition>(u_iInitialCondition);
 
-    std::cin >> INITCOND;
-
-    Simulation DownwindSin(X0, X1, T0, TEND, ADVCOEFF, NUMPOINTS, NUMGHOST, INITCOND, DIFFMETHOD, RELAXATION);
+    Simulation DownwindSin(u_X0, u_X1, u_T0, u_TEND, u_RELAXATION, u_ADVCOEFF, u_NUMPOINTS, u_NUMGHOST, u_eInitialCondition, u_eDifferenceMethod);
     DownwindSin.PerformTimeSteps();
 
     return 0;

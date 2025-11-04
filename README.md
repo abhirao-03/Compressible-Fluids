@@ -18,3 +18,5 @@ $$
 4. When we make $a$ smaller, we are in effect slowing down the progression of the $\sin$ wave, thus to keep the animation the same we must scale up the time horizon we consider, and vice versa when we increase $a$.
 5. Setting a relaxation of $0.9$ results in the discontinuity becoming smoothed out.
 6. By increasing the number of points from 100 to 400 we are in effect increasing the spatial quality of the simulation by 4 times, not only do we increase the spatial resolution, but to mantain stability using the downwind method, we must also increase the temporal resolution.
+
+## Practical 2
