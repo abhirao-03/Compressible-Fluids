@@ -30,6 +30,7 @@ void Simulation::BoxInitial(std::vector<double>& vec_dU)
             }
     }
 
+    
 void Simulation::SinInitial(std::vector<double>& vec_dU)
     {
         for (int i = 0; i < vec_dU.size(); i++)

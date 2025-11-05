@@ -24,23 +24,31 @@ class Simulation
         
         double m_dCourantLaxFlewyConstant = m_dAdvectionCoefficient * m_dDeltaT/m_dDeltaX;
     
+
+        // -- The following was implemented using AI
+        
+        using ProgressionFunction = void (Simulation::*)(const std::vector<double>&, std::vector<double>&, const int&);
+        ProgressionFunction m_ProgressionFunction = nullptr;
+        
+        // --
     public:
-        enum DifferenceMethod
-        {
-            BACKWARD = 1,
-            FORWARD = 2,
-            CENTRAL = 3
-        };
 
         enum class InitialCondition
-        {
-            SIN = 1,
-            BOX = 2,
-            EXP = 3
-        };
+            {
+                SIN = 1,
+                BOX = 2,
+                EXP = 3
+            };
         
-        DifferenceMethod m_eDifferenceMethod;
+        enum ProgressionMethod
+            {
+                BACKWARD = 1,
+                FORWARD = 2,
+                CENTRAL = 3
+            };
+
         InitialCondition m_eInitialCondition;
+        ProgressionMethod m_eProgressionMethod;
 
         // member initialization
         Simulation(
@@ -53,9 +61,9 @@ class Simulation
                     int iNumPoints,
                     int iNumGhostCells,
                     InitialCondition eInitialCondition,
-                    DifferenceMethod eDifferenceMethod
+                    ProgressionMethod eProgressionMethod
                 )
-            : 
+            :
             m_dXStart(dxStart),
             m_dXEnd(dxEnd),
             m_dTimeStart(dTimeStart),
@@ -65,7 +73,7 @@ class Simulation
             m_iNumPoints(iNumPoints),
             m_iNumGhostCells(iNumGhostCells),
             m_eInitialCondition(eInitialCondition),
-            m_eDifferenceMethod(eDifferenceMethod)
+            m_eProgressionMethod(eProgressionMethod)
             {
                 m_dDeltaX = (m_dXEnd - m_dXStart) / m_iNumPoints;
                 m_dDeltaT = m_dRelaxation * m_dDeltaX;
@@ -73,15 +81,18 @@ class Simulation
                 m_vec_dUNext.resize(m_iNumGhostCells + m_iNumPoints + 1);
                 m_dCourantLaxFlewyConstant = m_dAdvectionCoefficient * m_dDeltaT/m_dDeltaX;
             }
-
+        
+        // INITIAL CONDITION SETTERS
         void ExponentInitial(std::vector<double>& vec_dU);
         void BoxInitial(std::vector<double>& vec_dU);
         void SinInitial(std::vector<double>& vec_dU);
 
+
+        // DIFFERENCE AND PROGRESSION METHODS
         void BackwardDifference(const std::vector<double>& vec_dOldU, std::vector<double>& vec_dNewU, const int& i_IndexUpdate);
         void ForwardDifference(const std::vector<double>& vec_dOldU, std::vector<double>& vec_dNewU, const int& i_IndexUpdate);
         void CentralDifference(const std::vector<double>& vec_dOldU, std::vector<double>& vec_dNewU, const int& i_IndexUpdate);
-        // void FirstOrderUpwind(const std::vector<double>& vec_dOldU, std::vector<double>& vec_dNewU, const int& i_IndexUpdate); // this has not been implemented yet.
+        void FirstOrderUpwind(const std::vector<double>& vec_dOldU, std::vector<double>& vec_dNewU, const int& i_IndexUpdate); // this has not been implemented yet.
         void LaxFriedrichs(const std::vector<double>& vec_dOldU, std::vector<double>& vec_dNewU, const int& i_IndexUpdate);
         void LaxWendroff(const std::vector<double>& vec_dOldU, std::vector<double>& vec_dNewU, const int& i_IndexUpdate);
         void WarmingBeam(const std::vector<double>& vec_dOldU, std::vector<double>& vec_dNewU, const int& i_IndexUpdate);
@@ -104,50 +115,27 @@ class Simulation
                     }
             }
 
-        void PerformTimeSteps()
-        {
-            void (Simulation::*difference)(const std::vector<double>&, std::vector<double>&, const int&);
+        void SetProgressionMethod()
+            {
+                switch (m_eProgressionMethod)
+                    {
+                        case ProgressionMethod::BACKWARD:
+                            m_ProgressionFunction = &Simulation::BackwardDifference;
+                            break;
 
-            switch (m_eDifferenceMethod)
-                {
-                    case DifferenceMethod::BACKWARD:
-                        difference = &Simulation::BackwardDifference;
-                        break;
+                        case ProgressionMethod::FORWARD:
+                            m_ProgressionFunction = &Simulation::ForwardDifference;
+                            break;
 
-                    case DifferenceMethod::FORWARD:
-                        difference = &Simulation::ForwardDifference;
-                        break;
+                        case ProgressionMethod::CENTRAL:
+                            m_ProgressionFunction = &Simulation::ForwardDifference;
+                            break;
 
-                    case DifferenceMethod::CENTRAL:
-                        difference = &Simulation::ForwardDifference;
-                        break;
-                }
-
-            SetInitialCondition();
-            std::ofstream output("advectionResults.dat");
-
-            double d_Time = m_dTimeStart;
-
-            do 
-                {
-                    d_Time += m_dDeltaT;
-
-                    m_vec_dU[0] = m_vec_dU[m_iNumPoints + 1];
-                    m_vec_dU[m_iNumPoints + 2] = m_vec_dU[1];
-                    
-                    output << "# time = " << d_Time << std::endl;
-
-                    for (int i = 1; i <= m_iNumPoints; i++)
-                        {
-                            double d_CurrentX = m_dXStart + (i - 1) * m_dDeltaX;
-                            (this->*difference)(m_vec_dU, m_vec_dUNext, i);
-
-                            output << d_CurrentX << ' ' << m_vec_dU[i] << std::endl;
-                        }
-
-                    output << "\n\n";
-                    m_vec_dU = m_vec_dUNext;
-
-                } while (d_Time < m_dTimeEnd);
-        }
+                        default:
+                            m_ProgressionFunction = &Simulation::BackwardDifference;
+                            break;
+                    }
+            }
+        
+        void PerformTimeSteps();
 };
