@@ -16,11 +16,14 @@ int main(){
 
     int u_iInitialCondition;
     std::cin >> u_iInitialCondition;
-    
-    Simulation::DifferenceMethod u_eDifferenceMethod = Simulation::DifferenceMethod::BACKWARD;
-    Simulation::InitialCondition u_eInitialCondition = static_cast<Simulation::InitialCondition>(u_iInitialCondition);
 
-    Simulation DownwindSin(u_X0, u_X1, u_T0, u_TEND, u_RELAXATION, u_ADVCOEFF, u_NUMPOINTS, u_NUMGHOST, u_eInitialCondition, u_eDifferenceMethod);
+    int u_iProgressionMethod;
+    
+    Simulation::InitialCondition u_eInitialCondition = static_cast<Simulation::InitialCondition>(u_iInitialCondition);
+    Simulation::ProgressionMethod u_eProgressionMethod = Simulation::ProgressionMethod::BACKWARD;
+
+
+    Simulation DownwindSin(u_X0, u_X1, u_T0, u_TEND, u_RELAXATION, u_ADVCOEFF, u_NUMPOINTS, u_NUMGHOST, u_eInitialCondition, u_eProgressionMethod);
     DownwindSin.PerformTimeSteps();
 
     return 0;
