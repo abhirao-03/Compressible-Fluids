@@ -21,6 +21,8 @@ class Simulation
 
         std::vector<double> m_vec_dU;
         std::vector<double> m_vec_dUNext;
+        
+        double m_dCourantLaxFlewyConstant = m_dAdvectionCoefficient * m_dDeltaT/m_dDeltaX;
     
     public:
         enum DifferenceMethod
@@ -29,8 +31,6 @@ class Simulation
             FORWARD = 2,
             CENTRAL = 3
         };
-        
-        DifferenceMethod m_eDifferenceMethod;
 
         enum class InitialCondition
         {
@@ -38,7 +38,8 @@ class Simulation
             BOX = 2,
             EXP = 3
         };
-
+        
+        DifferenceMethod m_eDifferenceMethod;
         InitialCondition m_eInitialCondition;
 
         // member initialization
@@ -70,6 +71,7 @@ class Simulation
                 m_dDeltaT = m_dRelaxation * m_dDeltaX;
                 m_vec_dU.resize(m_iNumGhostCells + m_iNumPoints + 1);
                 m_vec_dUNext.resize(m_iNumGhostCells + m_iNumPoints + 1);
+                m_dCourantLaxFlewyConstant = m_dAdvectionCoefficient * m_dDeltaT/m_dDeltaX;
             }
 
         void ExponentInitial(std::vector<double>& vec_dU);
@@ -79,6 +81,10 @@ class Simulation
         void BackwardDifference(const std::vector<double>& vec_dOldU, std::vector<double>& vec_dNewU, const int& i_IndexUpdate);
         void ForwardDifference(const std::vector<double>& vec_dOldU, std::vector<double>& vec_dNewU, const int& i_IndexUpdate);
         void CentralDifference(const std::vector<double>& vec_dOldU, std::vector<double>& vec_dNewU, const int& i_IndexUpdate);
+        // void FirstOrderUpwind(const std::vector<double>& vec_dOldU, std::vector<double>& vec_dNewU, const int& i_IndexUpdate); // this has not been implemented yet.
+        void LaxFriedrichs(const std::vector<double>& vec_dOldU, std::vector<double>& vec_dNewU, const int& i_IndexUpdate);
+        void LaxWendroff(const std::vector<double>& vec_dOldU, std::vector<double>& vec_dNewU, const int& i_IndexUpdate);
+        void WarmingBeam(const std::vector<double>& vec_dOldU, std::vector<double>& vec_dNewU, const int& i_IndexUpdate);
 
         void SetInitialCondition()
             {
