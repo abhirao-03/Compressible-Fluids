@@ -1,4 +1,4 @@
-#include "../Practical1/simulation.h"
+#include "simulation.h"
 
 void Simulation::BackwardDifference(const std::vector<double>& vec_dOldU, std::vector<double>& vec_dNewU, const int& i_IndexUpdate)
 {

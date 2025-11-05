@@ -1,7 +1,7 @@
 #include <cmath>
 #include <vector>
 #include <iostream>
-#include "../Practical1/simulation.h"
+#include "simulation.h"
 
 void Simulation::ExponentInitial(std::vector<double>& vec_dU)
     {
