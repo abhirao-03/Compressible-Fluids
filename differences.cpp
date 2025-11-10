@@ -33,7 +33,6 @@ void Simulation::LaxWendroff(const std::vector<double>& vec_dOldU, std::vector<d
     vec_dNewU[i_IndexUpdate] = tmp_dPastContribution + tmp_dCurrentContribution - tmp_dFutureContribution;
 }
 
-
 void Simulation::WarmingBeam(const std::vector<double>& vec_dOldU, std::vector<double>& vec_dNewU, const int& i_IndexUpdate)
 {
 
