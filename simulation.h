@@ -88,15 +88,6 @@ class Simulation
         void SinInitial(std::vector<double>& vec_dU);
 
 
-        // DIFFERENCE AND PROGRESSION METHODS
-        void BackwardDifference(const std::vector<double>& vec_dOldU, std::vector<double>& vec_dNewU, const int& i_IndexUpdate);
-        void ForwardDifference(const std::vector<double>& vec_dOldU, std::vector<double>& vec_dNewU, const int& i_IndexUpdate);
-        void CentralDifference(const std::vector<double>& vec_dOldU, std::vector<double>& vec_dNewU, const int& i_IndexUpdate);
-        void FirstOrderUpwind(const std::vector<double>& vec_dOldU, std::vector<double>& vec_dNewU, const int& i_IndexUpdate);  // this has not been implemented yet.
-        void LaxFriedrichs(const std::vector<double>& vec_dOldU, std::vector<double>& vec_dNewU, const int& i_IndexUpdate);
-        void LaxWendroff(const std::vector<double>& vec_dOldU, std::vector<double>& vec_dNewU, const int& i_IndexUpdate);
-        void WarmingBeam(const std::vector<double>& vec_dOldU, std::vector<double>& vec_dNewU, const int& i_IndexUpdate);       // this has not been implemented yet.
-
         void SetInitialCondition()
             {
                 switch (m_eInitialCondition)
