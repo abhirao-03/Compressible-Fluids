@@ -40,15 +40,8 @@ class Simulation
                 EXP = 3
             };
         
-        enum ProgressionMethod
-            {
-                BACKWARD = 1,
-                FORWARD = 2,
-                CENTRAL = 3
-            };
 
         InitialCondition m_eInitialCondition;
-        ProgressionMethod m_eProgressionMethod;
 
         // member initialization
         Simulation(
@@ -60,8 +53,7 @@ class Simulation
                     double dAdvectionCoefficient,
                     int iNumPoints,
                     int iNumGhostCells,
-                    InitialCondition eInitialCondition,
-                    ProgressionMethod eProgressionMethod
+                    InitialCondition eInitialCondition
                 )
             :
             m_dXStart(dxStart),
@@ -72,8 +64,7 @@ class Simulation
             m_dAdvectionCoefficient(dAdvectionCoefficient),
             m_iNumPoints(iNumPoints),
             m_iNumGhostCells(iNumGhostCells),
-            m_eInitialCondition(eInitialCondition),
-            m_eProgressionMethod(eProgressionMethod)
+            m_eInitialCondition(eInitialCondition)
             {
                 m_dDeltaX = (m_dXEnd - m_dXStart) / m_iNumPoints;
                 m_dDeltaT = m_dRelaxation * m_dDeltaX;
@@ -106,27 +97,5 @@ class Simulation
                     }
             }
 
-        void SetProgressionMethod()
-            {
-                switch (m_eProgressionMethod)
-                    {
-                        case ProgressionMethod::BACKWARD:
-                            m_ProgressionFunction = &Simulation::BackwardDifference;
-                            break;
-
-                        case ProgressionMethod::FORWARD:
-                            m_ProgressionFunction = &Simulation::ForwardDifference;
-                            break;
-
-                        case ProgressionMethod::CENTRAL:
-                            m_ProgressionFunction = &Simulation::ForwardDifference;
-                            break;
-
-                        default:
-                            m_ProgressionFunction = &Simulation::BackwardDifference;
-                            break;
-                    }
-            }
-        
         void PerformTimeSteps();
 };
