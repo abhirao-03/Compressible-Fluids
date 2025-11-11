@@ -35,9 +35,10 @@ class Simulation
 
         enum class InitialCondition
             {
-                SIN = 1,
-                BOX = 2,
-                EXP = 3
+                SHOCKWAVE = 1,
+                RAREFACTION = 2,
+                TOROINITIAL = 3,
+                COSINE = 4
             };
 
         enum ProgressionMethod
@@ -85,29 +86,44 @@ class Simulation
             }
         
         // INITIAL CONDITION SETTERS
-        void ExponentInitial(std::vector<double>& vec_dU);
-        void BoxInitial(std::vector<double>& vec_dU);
-        void SinInitial(std::vector<double>& vec_dU);
+        void ShockWave(std::vector<double>& vec_dU);
+        void Rarefaction(std::vector<double>& vec_dU);
+        void ToroInitial(std::vector<double>& vec_dU);
+        void Cosine(std::vector<double>& vec_dU);
 
         void m_fvm_LaxFriedrichs(const std::vector<double>& vec_dOldU, std::vector<double>& vec_dNewU, const int& i_IndexUpdate);
         void m_fvm_Richtmyer(const std::vector<double>& vec_dOldU, std::vector<double>& vec_dNewU, const int& i_IndexUpdate);
         void m_fvm_FORCE(const std::vector<double>& vec_dOldU, std::vector<double>& vec_dNewU, const int& i_IndexUpdate);
         void m_fvm_Godunov(const std::vector<double>& vec_dOldU, std::vector<double>& vec_dNewU, const int& i_IndexUpdate);
 
+        void GetU();
+
         void SetInitialCondition()
             {
                 switch (m_eInitialCondition)
                     {
-                        case InitialCondition::SIN:
-                            SinInitial(m_vec_dU);
+                        case InitialCondition::SHOCKWAVE:
+                            ShockWave(m_vec_dU);
                             break;
                         
-                        case InitialCondition::BOX:
-                            BoxInitial(m_vec_dU);
+                        case InitialCondition::RAREFACTION:
+                            Rarefaction(m_vec_dU);
                             break;
                         
-                        case InitialCondition::EXP:
-                            ExponentInitial(m_vec_dU);
+                        case InitialCondition::TOROINITIAL:
+                            m_dTimeEnd = 1.5;
+                            m_dXEnd = 1.5;
+                            m_dDeltaX = (m_dXEnd - m_dXStart) / m_iNumPoints;
+                            m_dDeltaT = m_dRelaxation * m_dDeltaX;
+                            m_vec_dU.resize(m_iNumGhostCells + m_iNumPoints + 1);
+                            m_vec_dUNext.resize(m_iNumGhostCells + m_iNumPoints + 1);
+                            m_dCourantLaxFlewyConstant = m_dAdvectionCoefficient * m_dDeltaT/m_dDeltaX;
+
+                            ToroInitial(m_vec_dU);
+                            break;
+                        
+                        case InitialCondition::COSINE:
+                            Cosine(m_vec_dU);
                             break;
                     }
             }
