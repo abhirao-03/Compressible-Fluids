@@ -39,9 +39,18 @@ class Simulation
                 BOX = 2,
                 EXP = 3
             };
+
+        enum ProgressionMethod
+            {
+                LAXFRIEDRICHS = 1,
+                RICHTMYER = 2,
+                FORCE = 3,
+                GODUNOV = 4
+            };
         
 
         InitialCondition m_eInitialCondition;
+        ProgressionMethod m_eProgressionMethod;
 
         // member initialization
         Simulation(
@@ -53,7 +62,8 @@ class Simulation
                     double dAdvectionCoefficient,
                     int iNumPoints,
                     int iNumGhostCells,
-                    InitialCondition eInitialCondition
+                    InitialCondition eInitialCondition,
+                    ProgressionMethod eProgressionMethod
                 )
             :
             m_dXStart(dxStart),
@@ -64,7 +74,8 @@ class Simulation
             m_dAdvectionCoefficient(dAdvectionCoefficient),
             m_iNumPoints(iNumPoints),
             m_iNumGhostCells(iNumGhostCells),
-            m_eInitialCondition(eInitialCondition)
+            m_eInitialCondition(eInitialCondition),
+            m_eProgressionMethod(eProgressionMethod)
             {
                 m_dDeltaX = (m_dXEnd - m_dXStart) / m_iNumPoints;
                 m_dDeltaT = m_dRelaxation * m_dDeltaX;
@@ -78,6 +89,10 @@ class Simulation
         void BoxInitial(std::vector<double>& vec_dU);
         void SinInitial(std::vector<double>& vec_dU);
 
+        void m_fvm_LaxFriedrichs(const std::vector<double>& vec_dOldU, std::vector<double>& vec_dNewU, const int& i_IndexUpdate);
+        void m_fvm_Richtmyer(const std::vector<double>& vec_dOldU, std::vector<double>& vec_dNewU, const int& i_IndexUpdate);
+        void m_fvm_FORCE(const std::vector<double>& vec_dOldU, std::vector<double>& vec_dNewU, const int& i_IndexUpdate);
+        void m_fvm_Godunov(const std::vector<double>& vec_dOldU, std::vector<double>& vec_dNewU, const int& i_IndexUpdate);
 
         void SetInitialCondition()
             {
@@ -95,6 +110,33 @@ class Simulation
                             ExponentInitial(m_vec_dU);
                             break;
                     }
+            }
+
+        void SetProgressionMethod()
+            {
+                switch (m_eProgressionMethod)
+                    {
+                        case ProgressionMethod::LAXFRIEDRICHS:
+                            m_ProgressionFunction = &Simulation::m_fvm_LaxFriedrichs;
+                            break;
+                        
+                        case ProgressionMethod::RICHTMYER:
+                            m_ProgressionFunction = &Simulation::m_fvm_Richtmyer;
+                            break;
+
+                        case ProgressionMethod::FORCE:
+                            m_ProgressionFunction = &Simulation::m_fvm_FORCE;
+                            break;
+                        
+                        case ProgressionMethod::GODUNOV:
+                            m_ProgressionFunction = &Simulation::m_fvm_Godunov;
+                            break;
+                        
+                        default:
+                            m_ProgressionFunction = &Simulation::m_fvm_LaxFriedrichs;
+                            break;
+                    }
+
             }
 
         void PerformTimeSteps();
