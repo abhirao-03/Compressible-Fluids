@@ -52,5 +52,6 @@
         "new": "cpp",
         "ostream": "cpp",
         "sstream": "cpp"
-    }
+    },
+    "makefile.configureOnOpen": true
 }
