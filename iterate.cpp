@@ -17,13 +17,11 @@ void Simulation::Evolve()
 
         do
             {
-                SetTimeStep();
-                
-                t += m_dDeltaT;
-
                 SetBoundaryConditions();
-                
+                SetTimeStep();
                 (this->*m_ProgressionFunction)();
+
+                t += m_dDeltaT;
 
                 std::cout << "# time = " << t << std::endl;
 
