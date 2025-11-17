@@ -12,7 +12,7 @@ int main(){
     
     int u_NUMPOINTS = 400;
     int u_NUMGHOST = 2;
-    double u_RELAXATION = 0.9;
+    double u_RELAXATION = 0.8;
 
     int u_iInitialCondition;
     std::cin >> u_iInitialCondition;
@@ -21,9 +21,8 @@ int main(){
     Simulation::ProgressionMethod u_eProgressionMethod = Simulation::ProgressionMethod::LAXFRIEDRICHS;
 
     Simulation FiniteFlux(u_X0, u_X1, u_T0, u_TEND, u_RELAXATION, u_ADVCOEFF, u_NUMPOINTS, u_NUMGHOST, u_eInitialCondition, u_eProgressionMethod);
-
-    FiniteFlux.SetInitialCondition();
-    FiniteFlux.GetU();
+    
+    FiniteFlux.Evolve();
 
     return 0;
 }

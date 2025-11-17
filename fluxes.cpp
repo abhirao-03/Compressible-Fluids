@@ -1,33 +1,22 @@
 #include "simulation.h"
 #include <cmath>
 
-void Simulation::m_fvm_LaxFriedrichs(const std::vector<double>& vec_dOldU, std::vector<double>& vec_dNewU, const int& i_IndexUpdate)
-{
-    double uL = vec_dOldU[i_IndexUpdate];
-    double uR = vec_dOldU[i_IndexUpdate + 1];
+void Simulation::m_fvm_LaxFriedrichs()
+    {
+        for (int i = 0; i < m_vec_dU.size() - 1; i++)
+            {
+                double t_dULeft = m_vec_dU[i];
+                double t_dURight = m_vec_dU[i + 1];
 
-    double fL = 0.5*pow(uL, 2.0);
-    double fR = 0.5*pow(uR, 2.0);
+                double t_dFluxLeft = m_BurgersFluxFunction(t_dULeft);
+                double t_dFluxRight = m_BurgersFluxFunction(t_dURight);
 
-    double LaxFlux_One = (1.0/2.0) * (fL + fR);
+                m_vec_dFluxes[i] = 0.5 * (t_dFluxLeft + t_dFluxRight) + 0.5 * (m_dDeltaX/m_dDeltaT) * (t_dULeft - t_dURight);
+            }
+    }
 
-    // need to do the above computation ONE MORE TIME and then pass LaxFlux_two
-    // this is draft code, this will be changed relatively soon.
-    vec_dNewU[i] = uL + m_dDeltaT / m_dDeltaX * (LaxFlux_One);
+void Simulation::m_fvm_Richtmyer(){}
 
-}
+void Simulation::m_fvm_FORCE(){}
 
-void Simulation::m_fvm_Richtmyer(const std::vector<double>& vec_dOldU, std::vector<double>& vec_dNewU, const int& i_IndexUpdate)
-{
-
-}
-
-void Simulation::m_fvm_FORCE(const std::vector<double>& vec_dOldU, std::vector<double>& vec_dNewU, const int& i_IndexUpdate)
-{
-
-}
-
-void Simulation::m_fvm_Godunov(const std::vector<double>& vec_dOldU, std::vector<double>& vec_dNewU, const int& i_IndexUpdate)
-{
-
-}
+void Simulation::m_fvm_Godunov(){}

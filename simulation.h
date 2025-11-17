@@ -20,18 +20,17 @@ class Simulation
         double m_dDeltaT = m_dRelaxation * m_dDeltaX;
 
         std::vector<double> m_vec_dU;
+        std::vector<double> m_vec_dFluxes;
         std::vector<double> m_vec_dUNext;
-        
-        double m_dCourantLaxFlewyConstant = m_dAdvectionCoefficient * m_dDeltaT/m_dDeltaX;
-    
 
-        // -- The following was implemented using AI
+        // ---------------------------------- The following was implemented using Copilot ----------------------------------
         
-        using ProgressionFunction = void (Simulation::*)(const std::vector<double>&, std::vector<double>&, const int&);
+        using ProgressionFunction = void (Simulation::*)();
         ProgressionFunction m_ProgressionFunction = nullptr;
         
-        // --
-    public:
+        // ------------------------------------------------------------------------------------------------------------
+    
+        public:
 
         enum class InitialCondition
             {
@@ -80,9 +79,9 @@ class Simulation
             {
                 m_dDeltaX = (m_dXEnd - m_dXStart) / m_iNumPoints;
                 m_dDeltaT = m_dRelaxation * m_dDeltaX;
-                m_vec_dU.resize(m_iNumGhostCells + m_iNumPoints + 1);
-                m_vec_dUNext.resize(m_iNumGhostCells + m_iNumPoints + 1);
-                m_dCourantLaxFlewyConstant = m_dAdvectionCoefficient * m_dDeltaT/m_dDeltaX;
+                m_vec_dU.resize(m_iNumGhostCells + m_iNumPoints);
+                m_vec_dUNext.resize(m_iNumGhostCells + m_iNumPoints);
+                m_vec_dFluxes.resize(m_iNumGhostCells + m_iNumPoints);
             }
         
         // INITIAL CONDITION SETTERS
@@ -91,12 +90,37 @@ class Simulation
         void ToroInitial(std::vector<double>& vec_dU);
         void Cosine(std::vector<double>& vec_dU);
 
-        void m_fvm_LaxFriedrichs(const std::vector<double>& vec_dOldU, std::vector<double>& vec_dNewU, const int& i_IndexUpdate);
-        void m_fvm_Richtmyer(const std::vector<double>& vec_dOldU, std::vector<double>& vec_dNewU, const int& i_IndexUpdate);
-        void m_fvm_FORCE(const std::vector<double>& vec_dOldU, std::vector<double>& vec_dNewU, const int& i_IndexUpdate);
-        void m_fvm_Godunov(const std::vector<double>& vec_dOldU, std::vector<double>& vec_dNewU, const int& i_IndexUpdate);
+        void m_fvm_LaxFriedrichs();
+        void m_fvm_Richtmyer();
+        void m_fvm_FORCE();
+        void m_fvm_Godunov();
 
         void GetU();
+
+        double m_BurgersFluxFunction(const double& u)
+            {
+                return 0.5 * pow(u, 2.0);
+            }
+
+        void SetTimeStep()
+            {
+                double t_dMaxU = 0.0;
+
+                for (double t_dCurrentU : m_vec_dU)
+                    {
+                        if (std::abs(t_dCurrentU) > t_dMaxU)
+                            {
+                                t_dMaxU = t_dCurrentU;
+                            }
+                    }
+
+                if (t_dMaxU == 0.0)
+                    {
+                        m_dDeltaT = 1e-3;
+                    }
+                
+                m_dDeltaT = m_dRelaxation * m_dDeltaX / t_dMaxU;
+            };
 
         void SetInitialCondition()
             {
@@ -117,8 +141,6 @@ class Simulation
                             m_dDeltaT = m_dRelaxation * m_dDeltaX;
                             m_vec_dU.resize(m_iNumGhostCells + m_iNumPoints + 1);
                             m_vec_dUNext.resize(m_iNumGhostCells + m_iNumPoints + 1);
-                            m_dCourantLaxFlewyConstant = m_dAdvectionCoefficient * m_dDeltaT/m_dDeltaX;
-
                             ToroInitial(m_vec_dU);
                             break;
                         
@@ -155,5 +177,7 @@ class Simulation
 
             }
 
-        void PerformTimeSteps();
+        void SetFluxes();
+        void SetBoundaryConditions();
+        void Evolve();
 };
