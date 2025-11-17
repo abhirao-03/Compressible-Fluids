@@ -1,6 +1,6 @@
 # --- Output to a GIF file ---
 set terminal gif animate delay 10 optimize size 800,600
-set output 'advection.gif'
+set output 'name_holder.gif'
 
 set xlabel "x"
 set ylabel "u(x, t)"
@@ -10,7 +10,7 @@ set yrange [-0.1:2.1]
 set grid
 
 # --- Animation loop ---
-do for [i=0:10000] {
+do for [i=0:499] {
     plot 'flux.dat' index i using 1:2 with lines lw 2 lc rgb "blue" title sprintf("Timestep %d", i)
 }
 
