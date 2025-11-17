@@ -1,6 +1,5 @@
 *.dat
 *.o
 *.out
-*.gp
 *.h.pch
 *.h.*
