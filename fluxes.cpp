@@ -15,7 +15,24 @@ void Simulation::m_fvm_LaxFriedrichs()
             }
     }
 
-void Simulation::m_fvm_Richtmyer(){}
+void Simulation::m_fvm_Richtmyer()
+    {
+        std::vector<double> u_halfs(m_vec_dU.size());
+
+        for (int i = 0; i < u_halfs.size() - 1; i++)
+            {
+                double u_left = m_vec_dU[i];
+                double u_right = m_vec_dU[i + 1];
+
+                double u_FluxLeft = m_BurgersFluxFunction(u_left);
+                double u_FluxRight = m_BurgersFluxFunction(u_right);
+
+                u_halfs[i] = 0.5 * (u_left + u_right) - 0.5 * (m_dDeltaT / m_dDeltaX) * (u_FluxRight - u_FluxLeft);
+
+                m_vec_dFluxes[i] = m_BurgersFluxFunction(u_halfs[i]);
+            }
+        
+    }
 
 void Simulation::m_fvm_FORCE(){}
 

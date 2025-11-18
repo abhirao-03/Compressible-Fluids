@@ -4,7 +4,6 @@
 
 void Simulation::GetU()
 {
-    m_vec_dU;
 
     for (int i = 0; i < m_vec_dU.size(); i++)
     {

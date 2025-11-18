@@ -16,5 +16,4 @@ sim-second-LF : main.cpp simulation.h fluxes.cpp helpers.cpp initials.cpp iterat
 	g++ main.cpp simulation.h fluxes.cpp helpers.cpp initials.cpp iterate.cpp
 	echo 2 | ./a.out > flux.dat
 	gnuplot plotting.gp
-	mv name_holder.gif visualisations/SecondInitial.gif
 	make clean

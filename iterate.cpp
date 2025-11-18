@@ -25,7 +25,7 @@ void Simulation::Evolve()
 
                 std::cout << "# time = " << t << std::endl;
 
-                for (int i = 1; i < m_vec_dU.size() - 1; i ++)
+                for (int i = 1; i < m_vec_dU.size() - 1; i++)
                     {
                         double x = m_dXStart + (i - 0.5) * m_dDeltaX;
 
