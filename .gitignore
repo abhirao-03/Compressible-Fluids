@@ -3,3 +3,4 @@
 *.out
 *.h.pch
 *.h.*
+*.DS_Store
