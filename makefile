@@ -4,6 +4,9 @@ remove-gifs :
 clean :
 	rm *.dat *.out *.h.*
 
+executable : main.cpp simulation.h fluxes.cpp helpers.cpp initials.cpp iterate.cpp
+	g++ main.cpp simulation.h fluxes.cpp helpers.cpp initials.cpp iterate.cpp
+	rm *.h.*
 
 sim-first-LF : main.cpp simulation.h fluxes.cpp helpers.cpp initials.cpp iterate.cpp
 	g++ main.cpp simulation.h fluxes.cpp helpers.cpp initials.cpp iterate.cpp

@@ -18,7 +18,7 @@ int main(){
     std::cin >> u_iInitialCondition;
     
     Simulation::InitialCondition u_eInitialCondition = static_cast<Simulation::InitialCondition>(u_iInitialCondition);
-    Simulation::ProgressionMethod u_eProgressionMethod = Simulation::ProgressionMethod::RICHTMYER;
+    Simulation::ProgressionMethod u_eProgressionMethod = Simulation::ProgressionMethod::GODUNOV;
 
     Simulation FiniteFlux(u_X0, u_X1, u_T0, u_TEND, u_RELAXATION, u_ADVCOEFF, u_NUMPOINTS, u_NUMGHOST, u_eInitialCondition, u_eProgressionMethod);
     
