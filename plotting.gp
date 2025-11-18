@@ -6,7 +6,7 @@ set xlabel "x"
 set ylabel "u(x, t)"
 set title "Finite Volume Method for Burger's Equation"
 set xrange [0:1]
-set yrange [-0.1:2.1]
+set yrange [-1.1:1.1]
 set grid
 
 # --- Animation loop ---
