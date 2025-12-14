@@ -18,3 +18,8 @@ vec3 Simulation::GetPrimitives(const vec3& f_vec3_U)
 
         return vec3(density, velocity, pressure);
     }
+
+double Simulation::GetEnergy(const double& u_dDensity, const double& u_dVelocity, const double& u_dPressure)
+    {
+        return u_dPressure/(m_dGamma - 1.0) + (1.0/2.0) * (u_dDensity) * (pow(u_dVelocity, 2.0));
+    }

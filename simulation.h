@@ -11,7 +11,6 @@ class Simulation
         double m_dXEnd;
         double m_dTimeStart;
         double m_dTimeEnd;
-        double m_dAdvectionCoefficient;
 
         int m_iNumPoints;
         int m_iNumGhostCells;
@@ -19,7 +18,7 @@ class Simulation
         double m_dDeltaX = (m_dXStart - m_dXEnd) / m_iNumPoints;
         double m_dRelaxation;
         double m_dDeltaT = m_dRelaxation * m_dDeltaX;
-        double m_dGamma;
+        double m_dGamma = 1.4;
 
         std::vector<vec3> m_vec_dU;
         std::vector<vec3> m_vec_dFluxes;
@@ -36,6 +35,10 @@ class Simulation
 
         enum class InitialCondition
             {
+                INITIAL_ONE = 1,
+                INITIAL_TWO = 2,
+                INITIAL_THREE = 3,
+                INITIAL_FOUR = 4
             };
 
         enum ProgressionMethod
@@ -56,7 +59,6 @@ class Simulation
                     double dTimeStart,
                     double dTimeEnd,
                     double dRelaxation,
-                    double dAdvectionCoefficient,
                     double dGamma,
                     int iNumPoints,
                     int iNumGhostCells,
@@ -70,7 +72,6 @@ class Simulation
             m_dTimeEnd(dTimeEnd),
             m_dRelaxation(dRelaxation),
             m_dGamma(dGamma),
-            m_dAdvectionCoefficient(dAdvectionCoefficient),
             m_iNumPoints(iNumPoints),
             m_iNumGhostCells(iNumGhostCells),
             m_eInitialCondition(eInitialCondition),
@@ -83,6 +84,11 @@ class Simulation
                 m_vec_dFluxes.resize(m_iNumGhostCells + m_iNumPoints);
             }
         
+        void InitialOne(std::vector<vec3>& vec_dU);
+        void InitialTwo(std::vector<vec3>& vec_dU);
+        void InitialThree(std::vector<vec3>& vec_dU);
+        void InitialFour(std::vector<vec3>& vec_dU);
+
         void m_fvm_LaxFriedrichs();
         void m_fvm_Richtmyer();
         void m_fvm_FORCE();
@@ -90,6 +96,7 @@ class Simulation
 
         void GetU();
         vec3 GetPrimitives(const vec3& f_vec3_U);
+        double GetEnergy(const double& u_dDensity, const double& u_dVelocity, const double& u_dPressure);
 
         double m_BurgersFluxFunction(const double& u)
             {
@@ -115,11 +122,12 @@ class Simulation
             {
                 double f_dMaxInformationSpeed = 0.0;
 
-                for (vec3 l_vec3_Cell : m_vec_dU)
+                for (vec3& l_vec3_Cell : m_vec_dU)
                     {
-                        double l_dDensity = l_vec3_Cell[0];
-                        double l_dVelocity   = l_vec3_Cell[1];
-                        double l_dPressure   = l_vec3_Cell[2];
+                        vec3 l_vec3_Primitive = GetPrimitives(l_vec3_Cell);
+                        double l_dDensity = l_vec3_Primitive[0];
+                        double l_dVelocity   = l_vec3_Primitive[1];
+                        double l_dPressure   = l_vec3_Primitive[2];
 
                         double l_dSoundSpeed = std::sqrt(m_dGamma * l_dPressure / l_dDensity);
 
@@ -137,6 +145,28 @@ class Simulation
                 } else  {
                     m_dDeltaT = 1e-4;
                 }
+            }
+
+        void SetInitialCondition()
+            {
+                switch (m_eInitialCondition)
+                    {
+                        case InitialCondition::INITIAL_ONE:
+                            InitialOne(m_vec_dU);
+                            break;
+                        
+                        case InitialCondition::INITIAL_TWO:
+                            InitialTwo(m_vec_dU);
+                            break;
+                        
+                        case InitialCondition::INITIAL_THREE:
+                            InitialThree(m_vec_dU);
+                            break;
+                        
+                        case InitialCondition::INITIAL_FOUR:
+                            InitialFour(m_vec_dU);
+                            break;
+                    }
             }
 
         void SetProgressionMethod()
@@ -161,13 +191,12 @@ class Simulation
                     }
 
             }
-            
+
         void SetBoundaryConditions()
             {
                 m_vec_dU[0] = m_vec_dU[1];
                 m_vec_dU[m_iNumGhostCells + m_iNumPoints - 1] = m_vec_dU[m_iNumPoints];
             }
 
-        void SetFluxes();
         void Evolve();
 };
