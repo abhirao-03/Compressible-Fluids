@@ -9,3 +9,12 @@ void Simulation::GetU()
                 std::cout << x << ' ' << m_vec_dU[i] << std::endl;
             }
     }
+
+vec3 Simulation::GetPrimitives(const vec3& f_vec3_U)
+    {
+        double density = f_vec3_U[0];
+        double velocity = f_vec3_U[1] / density;
+        double pressure = (m_dGamma - 1) * (f_vec3_U[2] - (1.0/2.0)*(density * (pow(velocity, 2.0))));
+
+        return vec3(density, velocity, pressure);
+    }
