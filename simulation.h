@@ -1,6 +1,7 @@
 #include <cmath>
 #include <fstream>
 #include <vector>
+#include "EulerVectors.h"
 static const double PI = 4*atan(1);
 
 class Simulation
@@ -19,9 +20,9 @@ class Simulation
         double m_dRelaxation;
         double m_dDeltaT = m_dRelaxation * m_dDeltaX;
 
-        std::vector<double> m_vec_dU;
-        std::vector<double> m_vec_dFluxes;
-        std::vector<double> m_vec_dUNext;
+        std::vector<vec3> m_vec_dU;
+        std::vector<vec3> m_vec_dFluxes;
+        std::vector<vec3> m_vec_dUNext;
 
         // ---------------------------------- The following was implemented using Copilot ----------------------------------
         
@@ -103,52 +104,35 @@ class Simulation
             }
 
         void SetTimeStep()
-            {
-                double t_dMaxU = 0.0;
+            {};
 
-                for (double t_dCurrentU : m_vec_dU)
-                    {
-                        if (std::abs(t_dCurrentU) > t_dMaxU)
-                            {
-                                t_dMaxU = t_dCurrentU;
-                            }
-                    }
-
-                if (t_dMaxU == 0.0)
-                    {
-                        m_dDeltaT = 1e-3;
-                    }
-                
-                m_dDeltaT = m_dRelaxation * m_dDeltaX / t_dMaxU;
-            };
-
-        void SetInitialCondition()
-            {
-                switch (m_eInitialCondition)
-                    {
-                        case InitialCondition::SHOCKWAVE:
-                            ShockWave(m_vec_dU);
-                            break;
+        // void SetInitialCondition()
+        //     {
+        //         switch (m_eInitialCondition)
+        //             {
+        //                 case InitialCondition::SHOCKWAVE:
+        //                     ShockWave(m_vec_dU);
+        //                     break;
                         
-                        case InitialCondition::RAREFACTION:
-                            Rarefaction(m_vec_dU);
-                            break;
+        //                 case InitialCondition::RAREFACTION:
+        //                     Rarefaction(m_vec_dU);
+        //                     break;
                         
-                        case InitialCondition::TOROINITIAL:
-                            m_dTimeEnd = 1.5;
-                            m_dXEnd = 1.5;
-                            m_dDeltaX = (m_dXEnd - m_dXStart) / m_iNumPoints;
-                            m_dDeltaT = m_dRelaxation * m_dDeltaX;
-                            m_vec_dU.resize(m_iNumGhostCells + m_iNumPoints + 1);
-                            m_vec_dUNext.resize(m_iNumGhostCells + m_iNumPoints + 1);
-                            ToroInitial(m_vec_dU);
-                            break;
+        //                 case InitialCondition::TOROINITIAL:
+        //                     m_dTimeEnd = 1.5;
+        //                     m_dXEnd = 1.5;
+        //                     m_dDeltaX = (m_dXEnd - m_dXStart) / m_iNumPoints;
+        //                     m_dDeltaT = m_dRelaxation * m_dDeltaX;
+        //                     m_vec_dU.resize(m_iNumGhostCells + m_iNumPoints + 1);
+        //                     m_vec_dUNext.resize(m_iNumGhostCells + m_iNumPoints + 1);
+        //                     ToroInitial(m_vec_dU);
+        //                     break;
                         
-                        case InitialCondition::COSINE:
-                            Cosine(m_vec_dU);
-                            break;
-                    }
-            }
+        //                 case InitialCondition::COSINE:
+        //                     Cosine(m_vec_dU);
+        //                     break;
+        //             }
+        //     }
 
         void SetProgressionMethod()
             {
