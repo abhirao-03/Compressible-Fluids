@@ -1,3 +1,5 @@
+#include <iostream>
+
 class vec3 {
     public:
         double m_dVars[3];
@@ -60,3 +62,8 @@ inline vec3 operator*(const double& u_dScalar, const vec3& u_vVector)
     { 
         return u_vVector * u_dScalar;
     }
+
+inline std::ostream& operator<<(std::ostream& os, const vec3& v) {
+    os << v[0] << " " << v[1] << " " << v[2];
+    return os;
+}
