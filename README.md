@@ -13,3 +13,20 @@ Visualisations of the various initial conditions considered are shown below.
 
 ### Fourth Initial Condition
 ![Fourth Initial Condition](visualisations/FourthInitial.gif)
+
+# Toro Initial Conditions
+
+### First Toro Initial Condition
+![First Toro Initial Condition](visualisations/ToroInitialOne.gif)
+
+### Second Toro Initial Condition
+![Second Toro Initial Condition](visualisations/ToroInitialTwo.gif)
+
+### Third Toro Initial Condition
+![Third Toro Initial Condition](visualisations/ToroInitialThree.gif)
+
+### Fourth Toro Initial Condition
+![Fourth Toro Initial Condition](visualisations/ToroInitialFour.gif)
+
+### Fifth Toro Initial Condition
+![Fifth Toro Initial Condition](visualisations/ToroInitialFive.gif)
