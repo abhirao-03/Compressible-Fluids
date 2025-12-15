@@ -11,7 +11,7 @@ int main(){
     double u_RELAXATION = 0.8;
     double u_GAMMA = 1.4;
 
-    int u_NUMPOINTS = 100;
+    int u_NUMPOINTS = 400;
     int u_NUMGHOST = 2;
 
     int u_iInitialCondition;
