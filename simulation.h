@@ -103,7 +103,6 @@ class Simulation
         void m_fvm_LaxFriedrichs();
         void m_fvm_Richtmyer();
         void m_fvm_FORCE();
-        void m_fvm_Godunov();
 
         void GetU();
         vec3 GetPrimitives(const vec3& f_vec3_U);
@@ -222,7 +221,7 @@ class Simulation
                             break;
                         
                         default:
-                            m_ProgressionFunction = &Simulation::m_fvm_LaxFriedrichs;
+                            m_ProgressionFunction = &Simulation::m_fvm_FORCE;
                             break;
                     }
 
