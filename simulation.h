@@ -18,7 +18,12 @@ class Simulation
         double m_dDeltaX = (m_dXStart - m_dXEnd) / m_iNumPoints;
         double m_dRelaxation;
         double m_dDeltaT = m_dRelaxation * m_dDeltaX;
+
         double m_dGamma = 1.4;
+        double m_dOmega = 0.0;
+        double m_dSlopeLimitingR = 0.0;
+        double m_dLeftSlopeLimit = (2.0 * m_dSlopeLimitingR) / (1.0 + m_dSlopeLimitingR);
+        double m_dRightSlopeLimit = 2.0 / (1.0 + m_dSlopeLimitingR);
 
         std::vector<vec3> m_vec_dU;
         std::vector<vec3> m_vec_dFluxes;
@@ -28,6 +33,9 @@ class Simulation
         
         using ProgressionFunction = void (Simulation::*)();
         ProgressionFunction m_ProgressionFunction = nullptr;
+
+        using LimitingFunction = double (Simulation::*)();
+        LimitingFunction m_LimitingFunction = nullptr;
         
         // ------------------------------------------------------------------------------------------------------------
     
@@ -53,9 +61,17 @@ class Simulation
                 FORCE = 3
             };
         
+        enum SlopeLimiter
+            {
+                SUPERBEE = 1,
+                VAN_LEER = 2,
+                VAN_ALBADA = 3,
+                MINBEE = 4
+            };
 
         InitialCondition m_eInitialCondition;
         ProgressionMethod m_eProgressionMethod;
+        SlopeLimiter m_eSlopeLimiter;
 
         // member initialization
         Simulation(
@@ -104,9 +120,17 @@ class Simulation
         void m_fvm_Richtmyer();
         void m_fvm_FORCE();
 
+        double m_SL_Superbee();
+        double m_SL_VanLeer();
+        double m_SL_VanAlbada();
+        double m_SL_Minbee();
+
+
         void GetU();
-        vec3 GetPrimitives(const vec3& f_vec3_U);
         double GetEnergy(const double& u_dDensity, const double& u_dVelocity, const double& u_dPressure);
+        vec3 GetPrimitives(const vec3& f_vec3_U);
+
+        vec3 GetSlopeMeasure(const int& t_iCellValue);
 
         double m_BurgersFluxFunction(const double& u)
             {
@@ -225,6 +249,32 @@ class Simulation
                             break;
                     }
 
+            }
+        
+        void SetLimitingFunction()
+            {
+                switch (m_eSlopeLimiter)
+                    {
+                        case SlopeLimiter::SUPERBEE:
+                            m_LimitingFunction = &Simulation::m_SL_Superbee;
+                            break;
+
+                        case SlopeLimiter::VAN_LEER:
+                            m_LimitingFunction = &Simulation::m_SL_VanLeer;
+                            break;
+
+                        case SlopeLimiter::VAN_ALBADA:
+                            m_LimitingFunction = &Simulation::m_SL_VanAlbada;
+                            break;
+
+                        case SlopeLimiter::MINBEE:
+                            m_LimitingFunction = &Simulation::m_SL_Minbee;
+                            break;
+                        
+                        default:
+                            m_LimitingFunction = &Simulation::m_SL_Minbee;
+                            break;
+                    }
             }
 
         void SetBoundaryConditions()
