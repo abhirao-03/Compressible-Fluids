@@ -15,6 +15,11 @@ class vec3 {
         double operator[](int u_iInt) const {return m_dVars[u_iInt];}
         double& operator[](int u_iInt) {return m_dVars[u_iInt];}
         
+        int size()
+            {
+                return sizeof(m_dVars) / sizeof(m_dVars[0]);
+            }
+
         vec3& operator+=(const vec3& u_vVec)
             {
                 m_dVars[0] += u_vVec[0];
@@ -46,11 +51,28 @@ inline vec3 operator+(const vec3& u_vVector1, const vec3& u_vVector2)
                     u_vVector1[2] + u_vVector2[2]);
     }
 
+inline vec3 operator+(const double& u_dScalar, const vec3& u_vVector2)
+    {
+        return vec3(u_dScalar + u_vVector2[0],
+                    u_dScalar + u_vVector2[1],
+                    u_dScalar + u_vVector2[2]);
+    }
+
+inline vec3 operator+(const vec3& u_vVector1, const double& u_dScalar)
+    {
+        return u_dScalar + u_vVector1;
+    }
+
 inline vec3 operator-(const vec3& u_vVector1, const vec3& u_vVector2)
     {
         return vec3(u_vVector1[0] - u_vVector2[0],
                     u_vVector1[1] - u_vVector2[1],
                     u_vVector1[2] - u_vVector2[2]);
+    }
+
+inline vec3 operator*(const vec3& u_vVector1, const vec3& u_vVector2)
+    {
+        return vec3(u_vVector1[0]*u_vVector2[0], u_vVector1[1]*u_vVector2[1], u_vVector1[20]*u_vVector2[2]);
     }
 
 inline vec3 operator*(const vec3& u_vVector, const double& u_dScalar)
@@ -62,6 +84,18 @@ inline vec3 operator*(const double& u_dScalar, const vec3& u_vVector)
     { 
         return u_vVector * u_dScalar;
     }
+
+inline vec3 operator/(const vec3& u_vVector1, const vec3& u_vVcetor2)
+    {
+        return vec3(u_vVector1[0] / u_vVcetor2[0], u_vVector1[1] / u_vVcetor2[1], u_vVector1[2] / u_vVcetor2[2]);
+    }
+
+
+inline vec3 operator/(const double& u_dScalar, const vec3& u_vVector)
+    {
+        return (1/u_dScalar) * u_vVector;
+    }
+
 
 inline std::ostream& operator<<(std::ostream& os, const vec3& v) {
     os << v[0] << " " << v[1] << " " << v[2];

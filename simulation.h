@@ -21,20 +21,23 @@ class Simulation
 
         double m_dGamma = 1.4;
         double m_dOmega = 0.0;
-        double m_dSlopeLimitingR = 0.0;
-        double m_dLeftSlopeLimit = (2.0 * m_dSlopeLimitingR) / (1.0 + m_dSlopeLimitingR);
-        double m_dRightSlopeLimit = 2.0 / (1.0 + m_dSlopeLimitingR);
 
         std::vector<vec3> m_vec_dU;
         std::vector<vec3> m_vec_dFluxes;
+
+        std::vector<vec3> m_vec_dUHalf;
+        std::vector<vec3> m_vec_dFluxesHalf;
+
         std::vector<vec3> m_vec_dUNext;
+        std::vector<vec3> m_vec_dUHalfNext;
+
 
         // ---------------------------------- The following was implemented using Copilot ----------------------------------
         
-        using ProgressionFunction = void (Simulation::*)();
+        using ProgressionFunction = void (Simulation::*)(std::vector<vec3>& vec_dInputVector, std::vector<vec3>& vec_dUpdateVector);
         ProgressionFunction m_ProgressionFunction = nullptr;
 
-        using LimitingFunction = double (Simulation::*)();
+        using LimitingFunction = vec3 (Simulation::*)(const int& l_iIterValue);
         LimitingFunction m_LimitingFunction = nullptr;
         
         // ------------------------------------------------------------------------------------------------------------
@@ -116,21 +119,24 @@ class Simulation
         void ToroInitialFour(std::vector<vec3>& vec_dU);
         void ToroInitialFive(std::vector<vec3>& vec_dU);
 
-        void m_fvm_LaxFriedrichs();
-        void m_fvm_Richtmyer();
-        void m_fvm_FORCE();
+        void m_fvm_LaxFriedrichs(std::vector<vec3>& vec_dInputVector, std::vector<vec3>& vec_dUpdateVector);
+        void m_fvm_Richtmyer(std::vector<vec3>& vec_dInputVector, std::vector<vec3>& vec_dUpdateVector);
+        void m_fvm_FORCE(std::vector<vec3>& vec_dInputVector, std::vector<vec3>& vec_dUpdateVector);
 
-        double m_SL_Superbee();
-        double m_SL_VanLeer();
-        double m_SL_VanAlbada();
-        double m_SL_Minbee();
+        vec3 m_SL_Superbee(const int& l_iIterValue);
+        vec3 m_SL_VanLeer(const int& l_iIterValue);
+        vec3 m_SL_VanAlbada(const int& l_iIterValue);
+        vec3 m_SL_Minbee(const int& l_iIterValue);
 
 
         void GetU();
         double GetEnergy(const double& u_dDensity, const double& u_dVelocity, const double& u_dPressure);
+        
         vec3 GetPrimitives(const vec3& f_vec3_U);
-
+        vec3 GetSlopeLimitingR(const int& l_iIterValue);
         vec3 GetSlopeMeasure(const int& t_iCellValue);
+        
+        void m_ReconstructData();
 
         double m_BurgersFluxFunction(const double& u)
             {
