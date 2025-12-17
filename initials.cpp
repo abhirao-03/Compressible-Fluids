@@ -263,3 +263,30 @@ void Simulation::ToroInitialFive(std::vector<vec3>& vec_dU)
                     }
             }
     }
+
+void Simulation::InitialSineWave(std::vector<vec3>& vec_dU)
+{
+    // Parameters
+    double l_dVelocity = 1.0;
+    double l_dPressure = 1.0;
+
+    for (int i = 0; i < vec_dU.size(); i++)
+    {
+        vec3& l_vec3ConservedVars = vec_dU[i];
+
+        // Calculate cell center (Account for ghost cells!)
+        // If i=0 is ghost, x should be -0.5*dx. 
+        double l_dXVal = m_dXStart + (i - 0.5) * m_dDeltaX;
+
+        // Density Sine Wave
+        double l_dDensity = 1.0 + 0.2 * sin(2.0 * PI * l_dXVal);
+
+        // Calculate Energy
+        double l_dEnergy = GetEnergy(l_dDensity, l_dVelocity, l_dPressure);
+
+        // Set Conserved Variables
+        l_vec3ConservedVars[0] = l_dDensity;
+        l_vec3ConservedVars[1] = l_dDensity * l_dVelocity; // Momentum
+        l_vec3ConservedVars[2] = l_dEnergy;
+    }
+}

@@ -8,9 +8,9 @@ executable : main.cpp simulation.h fluxes.cpp helpers.cpp initials.cpp iterate.c
 	g++ main.cpp simulation.h fluxes.cpp helpers.cpp initials.cpp iterate.cpp
 	rm *.h.*
 
-sim-FORCE : main.cpp simulation.h fluxes.cpp helpers.cpp initials.cpp iterate.cpp
-	g++ main.cpp simulation.h fluxes.cpp helpers.cpp initials.cpp iterate.cpp
-	echo 9 | ./a.out > flux.dat
+sim-FORCE : main.cpp simulation.h fluxes.cpp helpers.cpp initials.cpp iterate.cpp slope_logic.cpp
+	g++ main.cpp simulation.h fluxes.cpp helpers.cpp initials.cpp iterate.cpp slope_logic.cpp
+	echo 6 | ./a.out > flux.dat
 	gnuplot plotting.gp
 	mv ./name_holder.gif ./visualisations/name_holder.gif
-	make clean
+	make clean`

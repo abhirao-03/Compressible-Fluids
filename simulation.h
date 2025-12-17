@@ -56,6 +56,7 @@ class Simulation
                 TORO_INIT_THREE = 7,
                 TORO_INIT_FOUR = 8,
                 TORO_INIT_FIVE = 9,
+                SINE_WAVE = 10
             };
 
         enum ProgressionMethod
@@ -88,7 +89,8 @@ class Simulation
                     int iNumPoints,
                     int iNumGhostCells,
                     InitialCondition eInitialCondition,
-                    ProgressionMethod eProgressionMethod
+                    ProgressionMethod eProgressionMethod,
+                    SlopeLimiter eSlopeLimiter
                 )
             :
             m_dXStart(dxStart),
@@ -100,7 +102,8 @@ class Simulation
             m_iNumPoints(iNumPoints),
             m_iNumGhostCells(iNumGhostCells),
             m_eInitialCondition(eInitialCondition),
-            m_eProgressionMethod(eProgressionMethod)
+            m_eProgressionMethod(eProgressionMethod),
+            m_eSlopeLimiter(eSlopeLimiter)
             {
                 m_dDeltaX = (m_dXEnd - m_dXStart) / m_iNumPoints;
                 m_dDeltaT = m_dRelaxation * m_dDeltaX;
@@ -123,6 +126,8 @@ class Simulation
         void ToroInitialThree(std::vector<vec3>& vec_dU);
         void ToroInitialFour(std::vector<vec3>& vec_dU);
         void ToroInitialFive(std::vector<vec3>& vec_dU);
+
+        void InitialSineWave(std::vector<vec3>& vec_dU);
 
         void m_fvm_LaxFriedrichs(std::vector<vec3>& vec_dInputVector, std::vector<vec3>& vec_dUpdateVector);
         void m_fvm_Richtmyer(std::vector<vec3>& vec_dInputVector, std::vector<vec3>& vec_dUpdateVector);
@@ -237,6 +242,12 @@ class Simulation
                             m_dTimeEnd = 0.035;
                             ToroInitialFive(m_vec_dU);
                             break;
+                        
+                        case InitialCondition::SINE_WAVE:
+                            m_dTimeEnd = 1.0;
+                            InitialSineWave(m_vec_dU);
+                            break;
+
                     }
             }
 
