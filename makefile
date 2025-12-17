@@ -10,7 +10,7 @@ executable : main.cpp simulation.h fluxes.cpp helpers.cpp initials.cpp iterate.c
 
 sim-FORCE : main.cpp simulation.h fluxes.cpp helpers.cpp initials.cpp iterate.cpp slope_logic.cpp
 	g++ main.cpp simulation.h fluxes.cpp helpers.cpp initials.cpp iterate.cpp slope_logic.cpp
-	echo 6 | ./a.out > flux.dat
+	echo 5 | ./a.out > flux.dat
 	gnuplot plotting.gp
 	mv ./name_holder.gif ./visualisations/name_holder.gif
 	make clean`
