@@ -25,7 +25,8 @@ class Simulation
         std::vector<vec3> m_vec_dU;
         std::vector<vec3> m_vec_dFluxes;
 
-        std::vector<vec3> m_vec_dUHalf;
+        std::vector<vec3> m_vec_LeftReconstructed;
+        std::vector<vec3> m_vec_RightReconstructed;
         std::vector<vec3> m_vec_dFluxesHalf;
 
         std::vector<vec3> m_vec_dUNext;
@@ -103,9 +104,13 @@ class Simulation
             {
                 m_dDeltaX = (m_dXEnd - m_dXStart) / m_iNumPoints;
                 m_dDeltaT = m_dRelaxation * m_dDeltaX;
+
                 m_vec_dU.resize(m_iNumGhostCells + m_iNumPoints);
-                m_vec_dUNext.resize(m_iNumGhostCells + m_iNumPoints);
                 m_vec_dFluxes.resize(m_iNumGhostCells + m_iNumPoints);
+                m_vec_LeftReconstructed.resize(m_iNumGhostCells + m_iNumPoints);
+                m_vec_RightReconstructed.resize(m_iNumGhostCells + m_iNumPoints);
+                m_vec_dUNext.resize(m_iNumGhostCells + m_iNumPoints);
+
             }
         
         void InitialOne(std::vector<vec3>& vec_dU);
@@ -137,6 +142,7 @@ class Simulation
         vec3 GetSlopeMeasure(const int& t_iCellValue);
         
         void m_ReconstructData();
+        void m_CalculateFluxesFromReconstruction();
 
         double m_BurgersFluxFunction(const double& u)
             {

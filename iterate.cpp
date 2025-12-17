@@ -14,6 +14,9 @@ void Simulation::Evolve()
             {
                 SetBoundaryConditions();
                 SetTimeStep();
+                m_ReconstructData();
+                m_CalculateFluxesFromReconstruction();
+
                 (this->*m_ProgressionFunction)(m_vec_dU, m_vec_dFluxes);
 
                 t += m_dDeltaT;
@@ -23,11 +26,7 @@ void Simulation::Evolve()
                 for (int i = 1; i < m_vec_dU.size() - 1; i++)
                     {
                         double x = m_dXStart + (i - 0.5) * m_dDeltaX;
-                        m_ReconstructData();
-                        (this->*m_ProgressionFunction)(m_vec_dUHalf, m_vec_dFluxesHalf);
-                        m_vec_dUHalfNext[i] = m_vec_dUHalf[i] - (1.0/2.0) * (m_dDeltaT / m_dDeltaX) * (m_vec_dFluxesHalf[i] - m_vec_dFluxesHalf[i - 1]);
-
-                        (this->*m_ProgressionFunction)(m_vec_dUHalf, m_vec_dFluxes);
+                        
                         m_vec_dUNext[i] = m_vec_dU[i] - (m_dDeltaT / m_dDeltaX) * (m_vec_dFluxes[i] - m_vec_dFluxes[i - 1]);
 
                         std::cout << x << ' ' << m_vec_dUNext[i] << std::endl;

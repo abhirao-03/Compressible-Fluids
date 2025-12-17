@@ -3,7 +3,7 @@
 vec3 Simulation::GetSlopeLimitingR(const int& t_iCellValue)
     {
         vec3 l_dNumerator = m_vec_dU[t_iCellValue] - m_vec_dU[t_iCellValue - 1];
-        vec3 l_dDenominator = m_vec_dU[t_iCellValue] - m_vec_dU[t_iCellValue - 1];
+        vec3 l_dDenominator = m_vec_dU[t_iCellValue + 1]  - m_vec_dU[t_iCellValue];
 
         vec3 i_vec3SlopeLimitingR = l_dNumerator / l_dDenominator;
 
@@ -109,6 +109,8 @@ vec3 Simulation::m_SL_VanAlbada(const int& l_iIterValue)
                         l_vResults[i] = std::min(l_dFirstTerm, m_dRightSlopeLimit[i]);
                     }
             }
+
+        return l_vResults;
     }
 
 vec3 Simulation::m_SL_Minbee(const int& l_iIterValue)
@@ -145,12 +147,13 @@ void Simulation::m_ReconstructData()
                 vec3 l_dLimiter = (this->*m_LimitingFunction)(i);
                 vec3 l_SlopeMeasure = GetSlopeMeasure(i);
 
-                double x = m_dXStart + (i - 0.5) * m_dDeltaX;
+                vec3 l_dDeltaNumerator = m_vec_dU[i+1] - m_vec_dU[i];
+                vec3 l_dDeltaDenominator = m_vec_dU[i] - m_vec_dU[i-1];
 
                 vec3 l_vec3ULeft = m_vec_dU[i] - (1.0/2.0) * (l_dLimiter * l_SlopeMeasure);
                 vec3 l_vec3URight = m_vec_dU[i] + (1.0/2.0) * (l_dLimiter * l_SlopeMeasure);
 
-                m_vec_dUHalf[i] = l_vec3ULeft;
-                m_vec_dUHalf[i+1] = l_vec3URight;
+                m_vec_LeftReconstructed[i] = l_vec3ULeft;
+                m_vec_RightReconstructed[i] = l_vec3URight;
             }
     }
