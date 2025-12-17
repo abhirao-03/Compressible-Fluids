@@ -15,9 +15,9 @@ class Simulation
         int m_iNumPoints;
         int m_iNumGhostCells;
 
-        double m_dDeltaX = (m_dXStart - m_dXEnd) / m_iNumPoints;
+        double m_dDeltaX;
         double m_dRelaxation;
-        double m_dDeltaT = m_dRelaxation * m_dDeltaX;
+        double m_dDeltaT;
 
         double m_dGamma = 1.4;
         double m_dOmega = 0.0;
@@ -173,9 +173,9 @@ class Simulation
             {
                 double f_dMaxInformationSpeed = 0.0;
 
-                for (vec3& l_vec3_Cell : m_vec_dU)
+                for (int i = 1; i < m_vec_dU.size() - 1; i++)
                     {
-                        vec3 l_vec3_Primitive = GetPrimitives(l_vec3_Cell);
+                        vec3 l_vec3_Primitive = GetPrimitives(m_vec_dU[i]);
                         double l_dDensity = l_vec3_Primitive[0];
                         double l_dVelocity   = l_vec3_Primitive[1];
                         double l_dPressure   = l_vec3_Primitive[2];

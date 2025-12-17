@@ -72,7 +72,7 @@ inline vec3 operator-(const vec3& u_vVector1, const vec3& u_vVector2)
 
 inline vec3 operator*(const vec3& u_vVector1, const vec3& u_vVector2)
     {
-        return vec3(u_vVector1[0]*u_vVector2[0], u_vVector1[1]*u_vVector2[1], u_vVector1[0]*u_vVector2[2]);
+        return vec3(u_vVector1[0]*u_vVector2[0], u_vVector1[1]*u_vVector2[1], u_vVector1[2]*u_vVector2[2]);
     }
 
 inline vec3 operator*(const vec3& u_vVector, const double& u_dScalar)

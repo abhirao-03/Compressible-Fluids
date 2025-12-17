@@ -2,10 +2,24 @@
 
 vec3 Simulation::GetSlopeLimitingR(const int& t_iCellValue)
     {
+        const double eps = 1e-12;
+
         vec3 l_dNumerator = m_vec_dU[t_iCellValue] - m_vec_dU[t_iCellValue - 1];
         vec3 l_dDenominator = m_vec_dU[t_iCellValue + 1]  - m_vec_dU[t_iCellValue];
 
-        vec3 i_vec3SlopeLimitingR = l_dNumerator / l_dDenominator;
+        vec3 i_vec3SlopeLimitingR;
+
+        for (int k = 0; k < l_dNumerator.size(); ++k)
+            {
+                if (std::abs(l_dDenominator[k]) > eps)
+                    {
+                        i_vec3SlopeLimitingR[k] = l_dNumerator[k] / l_dDenominator[k];
+                    }
+                else 
+                    {
+                        i_vec3SlopeLimitingR[k] = 0.0;
+                    }
+            }
 
         return i_vec3SlopeLimitingR;
 

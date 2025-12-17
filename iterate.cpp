@@ -14,11 +14,19 @@ void Simulation::Evolve()
             {
                 SetBoundaryConditions();
                 SetTimeStep();
-                m_ReconstructData();
-                m_CalculateFluxesFromReconstruction();
 
-                (this->*m_ProgressionFunction)(m_vec_dU, m_vec_dFluxes);
+                if (m_eProgressionMethod == ProgressionMethod::FORCE)
+                    {
+                        m_ReconstructData();
+                        m_CalculateFluxesFromReconstruction();
+                    }
+                else
+                    {
+                        (this->*m_ProgressionFunction)(m_vec_dU, m_vec_dFluxes);        
+                    }
 
+                
+    
                 t += m_dDeltaT;
 
                 std::cout << "# time = " << t << std::endl;
