@@ -10,7 +10,7 @@ void Simulation::GetU()
             }
     }
 
-vec3 Simulation::GetPrimitives(const vec3& f_vec3_U)
+vec3 Simulation::m_GetPrimitives(const vec3& f_vec3_U)
     {
 
         double density = f_vec3_U[0];

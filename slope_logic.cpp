@@ -1,41 +1,19 @@
 #include "simulation.h"
 
-vec3 Simulation::GetSlopeLimitingR(const int& t_iCellValue)
+vec3 Simulation::m_GetSlopeMeasure(const int& t_iCellValue)
     {
-        const double eps = 1e-12;
-
-        vec3 l_dNumerator = m_vec_dU[t_iCellValue] - m_vec_dU[t_iCellValue - 1];
-        vec3 l_dDenominator = m_vec_dU[t_iCellValue + 1]  - m_vec_dU[t_iCellValue];
-
-        vec3 i_vec3SlopeLimitingR;
-
-        for (int k = 0; k < l_dNumerator.size(); ++k)
-            {
-                if (std::abs(l_dDenominator[k]) > eps)
-                    {
-                        i_vec3SlopeLimitingR[k] = l_dNumerator[k] / l_dDenominator[k];
-                    }
-                else 
-                    {
-                        i_vec3SlopeLimitingR[k] = 0.0;
-                    }
-            }
-
-        return i_vec3SlopeLimitingR;
-
-    }
-
-vec3 Simulation::GetSlopeMeasure(const int& t_iCellValue)
-    {
+        // Handle first and last cell values;
         if (t_iCellValue == 0)
             {
                 return vec3(0.0, 0.0, 0.0);
-            } 
+            }
 
         else if (t_iCellValue == m_vec_dU.size() - 1)
             {
                 return vec3(0.0, 0.0, 0.0);
             }
+
+        // Handle the interiors.
         else
             {
                 vec3 t_vec3Current = m_vec_dU[t_iCellValue];
@@ -49,107 +27,43 @@ vec3 Simulation::GetSlopeMeasure(const int& t_iCellValue)
             }
     }
 
-vec3 Simulation::m_SL_Superbee(const int& l_iIterValue)
+void Simulation::m_ReconstructData()
     {
-        vec3 l_dSlopeLimitingR = GetSlopeLimitingR(l_iIterValue);
-        vec3 m_dLeftSlopeLimit = (2.0 * l_dSlopeLimitingR) / (1.0 + l_dSlopeLimitingR);
-        vec3 m_dRightSlopeLimit = 2.0 / (1.0 + l_dSlopeLimitingR);
-
-        vec3 l_vResults = vec3();
-
-        for (int i = 0; i < l_dSlopeLimitingR.size(); i++)
+        for(int i = 0; i < m_vec_dU.size(); i++)
             {
-            if (l_dSlopeLimitingR[i] <= 0.0)
-                {
-                    l_vResults[i] = 0.0;
-                }
-            else if (l_dSlopeLimitingR[i] > 0.0 && l_dSlopeLimitingR[i] <= 1.0/2.0)
-                {
-                    l_vResults[i] = 2.0 * l_dSlopeLimitingR[i];
-                }
-            else if (l_dSlopeLimitingR[i] > 1.0/2.0 and l_dSlopeLimitingR[i] <= 1.0)
-                {
-                    l_vResults[i] = 1.0;
-                }
-            else
-                {
-                    l_vResults[i] = std::min(l_dSlopeLimitingR[i], std::min(m_dRightSlopeLimit[i], 2.0));
-                }
+                m_vec_LeftReconstructed[i]  = m_vec_dU[i];
+                m_vec_RightReconstructed[i] = m_vec_dU[i];
             }
-        
-        return l_vResults;
+
+
+        for (int i = 1; i < m_vec_dU.size() - 1; i++)
+            {
+                vec3 l_vDeltaI = m_GetSlopeMeasure(i);
+                vec3 l_vLimiter = (this->*m_LimitingFunction)(i);
+                
+                m_vec_LeftReconstructed[i] = m_vec_dU[i] - (1.0/2.0)*l_vLimiter*l_vDeltaI;
+                m_vec_RightReconstructed[i] = m_vec_dU[i] + (1.0/2.0)*l_vLimiter*l_vDeltaI;
+            }
     }
-
-vec3 Simulation::m_SL_VanLeer(const int& l_iIterValue)
+    
+void Simulation::m_GetReconstructedFluxes()
     {
-        vec3 l_dSlopeLimitingR = GetSlopeLimitingR(l_iIterValue);
-        vec3 m_dLeftSlopeLimit = (2.0 * l_dSlopeLimitingR) / (1.0 + l_dSlopeLimitingR);
-        vec3 m_dRightSlopeLimit = 2.0 / (1.0 + l_dSlopeLimitingR);
-
-        vec3 l_vResults = vec3();
-
-        for (int i = 0; i < l_dSlopeLimitingR.size(); i++)
+        for (int i = 0; i < m_vec_dU.size() - 1; i++)
             {
-                if (l_dSlopeLimitingR[i] <= 0.0)
-                    {
-                        l_vResults[i] = 0.0;
-                    }
-                else
-                    {
-                        l_vResults[i] = std::min(m_dLeftSlopeLimit[i], m_dRightSlopeLimit[i]);
-                    }
+                vec3 t_dULeft = m_vec_RightReconstructed[i];
+                vec3 t_dURight = m_vec_LeftReconstructed[i+1];
+                
+                vec3 t_dFluxLeft = m_EulerFluxFunction(t_dULeft);
+                vec3 t_dFluxRight = m_EulerFluxFunction(t_dURight);
+                
+                //LaxFriedrich Flux Get
+                vec3 FluxLaxFriedrichs = 0.5 * (t_dFluxLeft + t_dFluxRight) + 0.5 * (m_dDeltaX/m_dDeltaT) * (t_dULeft - t_dURight);
+                
+                //Richtmyer Flux get
+                // Step 1 LF Update;
+                vec3 U_Richtmyer = 0.5 * (t_dULeft + t_dURight) + 0.5 * (m_dDeltaT / m_dDeltaX) * (t_dFluxLeft - t_dFluxRight);
+                vec3 FluxRichtmter = m_EulerFluxFunction(U_Richtmyer);
+                
+                m_vec_dFluxesReconstructed[i] = 0.5 * (FluxLaxFriedrichs + FluxRichtmter);
             }
-        
-        return l_vResults;
-    }
-
-vec3 Simulation::m_SL_VanAlbada(const int& l_iIterValue)
-    {
-        vec3 l_dSlopeLimitingR = GetSlopeLimitingR(l_iIterValue);
-        vec3 m_dLeftSlopeLimit = (2.0 * l_dSlopeLimitingR) / (1.0 + l_dSlopeLimitingR);
-        vec3 m_dRightSlopeLimit = 2.0 / (1.0 + l_dSlopeLimitingR);
-
-        vec3 l_vResults = vec3();
-        
-        for (int i = 0; i < l_dSlopeLimitingR.size(); i++)
-            {
-                if (l_dSlopeLimitingR[i] <= 0.0)
-                    {
-                        l_vResults[i] = 0.0;
-                    }
-                else
-                    {
-                        double l_dFirstTerm = l_dSlopeLimitingR[i] * (1 + l_dSlopeLimitingR[i]) / (1 + l_dSlopeLimitingR[i] * l_dSlopeLimitingR[i]);
-                        l_vResults[i] = std::min(l_dFirstTerm, m_dRightSlopeLimit[i]);
-                    }
-            }
-
-        return l_vResults;
-    }
-
-vec3 Simulation::m_SL_Minbee(const int& l_iIterValue)
-    {
-        vec3 l_dSlopeLimitingR = GetSlopeLimitingR(l_iIterValue);
-        vec3 m_dLeftSlopeLimit = (2.0 * l_dSlopeLimitingR) / (1.0 + l_dSlopeLimitingR);
-        vec3 m_dRightSlopeLimit = 2.0 / (1.0 + l_dSlopeLimitingR);
-
-        vec3 l_vResults = vec3();
-        
-        for (int i = 0; i < l_dSlopeLimitingR.size(); i++)
-            {
-                if (l_dSlopeLimitingR[i] <= 0.0)
-                    {
-                        l_vResults[i] = 0.0;
-                    }
-                else if (l_dSlopeLimitingR[i] > 0.0 && l_dSlopeLimitingR[i] <= 1.0)
-                    {
-                        l_vResults[i] = l_dSlopeLimitingR[i];
-                    }
-                else 
-                    {
-                        l_vResults[i] = std::min(1.0, m_dRightSlopeLimit[i]);
-                    }   
-            }
-        
-        return l_vResults;
     }

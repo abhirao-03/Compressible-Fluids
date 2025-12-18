@@ -6,7 +6,6 @@ set output 'name_holder.gif'
 GAMMA = 1.4
 
 # --- Scan the file first to count the number of time steps ---
-# This prevents hardcoding "499" and breaking if you change T_END
 stats 'flux.dat' nooutput
 N = STATS_blocks - 1
 
@@ -20,7 +19,6 @@ set grid xtics lc rgb "#bbbbbb" lw 1 lt 0
 # --- Animation Loop ---
 do for [i=0:N] {
     
-    # Set up a 3x1 grid for the plots
     set multiplot layout 3,1 title sprintf("Euler Equations - Frame %d", i) font ",14"
 
     # Common X-axis settings
@@ -28,25 +26,25 @@ do for [i=0:N] {
     
     # --- PLOT 1: DENSITY (Column 2) ---
     set ylabel "Density"
-    set yrange [0:*]  # Density should never be negative
-    set format x ""   # Hide x-labels for top plots
+    set yrange [0:*]
+    set format x ""
     set tmargin 2
-    plot 'flux.dat' index i using 1:2 with lines ls 1 title "rho"
+    # Fix: If val is NaN, plot 0
+    plot 'flux.dat' index i using 1:(valid(2) ? $2 : 0) with lines ls 1 title "rho"
 
     # --- PLOT 2: VELOCITY (Column 3 / Column 2) ---
-    # v = (rho*v) / rho
     set ylabel "Velocity"
-    set yrange [*:*] # Autoscale
-    plot 'flux.dat' index i using 1:($3/$2) with lines ls 2 title "v"
+    set yrange [*:*] 
+    # Fix: Check if Density ($2) is almost zero to avoid division by zero
+    plot 'flux.dat' index i using 1:(abs($2) > 1e-9 ? $3/$2 : 0) with lines ls 2 title "v"
 
-    # --- PLOT 3: PRESSURE (Derived from Energy) ---
-    # P = (gamma-1) * (E - 0.5 * rho * v^2)
-    # P = (gamma-1) * (Col4 - 0.5 * (Col3^2 / Col2))
+    # --- PLOT 3: PRESSURE ---
     set ylabel "Pressure"
     set xlabel "Position (x)"
-    set format x "%g" # Show x-labels for bottom plot
+    set format x "%g"
     set yrange [0:*]
-    plot 'flux.dat' index i using 1:((GAMMA-1)*($4 - 0.5*($3**2)/$2)) with lines ls 3 title "P"
+    # Fix: Check if Density ($2) is almost zero before dividing
+    plot 'flux.dat' index i using 1:(abs($2) > 1e-9 ? (GAMMA-1)*($4 - 0.5*($3**2)/$2) : 0) with lines ls 3 title "P"
 
     unset multiplot
 }
