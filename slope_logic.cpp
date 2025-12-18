@@ -156,7 +156,7 @@ vec3 Simulation::m_SL_Minbee(const int& l_iIterValue)
 
 void Simulation::m_ReconstructData()
     {
-        for (int i = 1; i < m_vec_dU.size() - 1; i++)
+        for (int i = 1; i < m_vec_dU.size() - 2; i++)
             {
                 vec3 l_dLimiter = (this->*m_LimitingFunction)(i);
                 vec3 l_SlopeMeasure = GetSlopeMeasure(i);
