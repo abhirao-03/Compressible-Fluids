@@ -34,15 +34,15 @@ class Simulation
 
 
         // ---------------------------------- The following was implemented using Copilot ----------------------------------
-        
+
         using ProgressionFunction = void (Simulation::*)(std::vector<vec3>& vec_dInputVector, std::vector<vec3>& vec_dUpdateVector);
         ProgressionFunction m_ProgressionFunction = nullptr;
 
         using LimitingFunction = vec3 (Simulation::*)(const int& l_iIterValue);
         LimitingFunction m_LimitingFunction = nullptr;
-        
+
         // ------------------------------------------------------------------------------------------------------------
-    
+
         public:
 
         enum class InitialCondition
@@ -65,7 +65,7 @@ class Simulation
                 RICHTMYER = 2,
                 FORCE = 3
             };
-        
+
         enum SlopeLimiter
             {
                 SUPERBEE = 1,
@@ -115,12 +115,12 @@ class Simulation
                 m_vec_dUNext.resize(m_iNumGhostCells + m_iNumPoints);
 
             }
-        
+
         void InitialOne(std::vector<vec3>& vec_dU);
         void InitialTwo(std::vector<vec3>& vec_dU);
         void InitialThree(std::vector<vec3>& vec_dU);
         void InitialFour(std::vector<vec3>& vec_dU);
-        
+
         void ToroInitialOne(std::vector<vec3>& vec_dU);
         void ToroInitialTwo(std::vector<vec3>& vec_dU);
         void ToroInitialThree(std::vector<vec3>& vec_dU);
@@ -141,11 +141,11 @@ class Simulation
 
         void GetU();
         double GetEnergy(const double& u_dDensity, const double& u_dVelocity, const double& u_dPressure);
-        
+
         vec3 GetPrimitives(const vec3& f_vec3_U);
         vec3 GetSlopeLimitingR(const int& l_iIterValue);
         vec3 GetSlopeMeasure(const int& t_iCellValue);
-        
+
         void m_ReconstructData();
         void m_CalculateFluxesFromReconstruction();
 
@@ -189,7 +189,7 @@ class Simulation
                                 f_dMaxInformationSpeed = l_dCurrentMax;
                             }
                     };
-                
+
                 if (f_dMaxInformationSpeed > 0.0)
                 {
                     m_dDeltaT = m_dRelaxation * m_dDeltaX / f_dMaxInformationSpeed;
@@ -205,44 +205,44 @@ class Simulation
                         case InitialCondition::INITIAL_ONE:
                             InitialOne(m_vec_dU);
                             break;
-                        
+
                         case InitialCondition::INITIAL_TWO:
                             InitialTwo(m_vec_dU);
                             break;
-                        
+
                         case InitialCondition::INITIAL_THREE:
                             InitialThree(m_vec_dU);
                             break;
-                        
+
                         case InitialCondition::INITIAL_FOUR:
                             InitialFour(m_vec_dU);
                             break;
-                        
+
                         case InitialCondition::TORO_INIT_ONE:
                             m_dTimeEnd = 0.25;
                             ToroInitialOne(m_vec_dU);
                             break;
-                        
+
                         case InitialCondition::TORO_INIT_TWO:
                             m_dTimeEnd = 0.15;
                             ToroInitialTwo(m_vec_dU);
                             break;
-                        
+
                         case InitialCondition::TORO_INIT_THREE:
                             m_dTimeEnd = 0.012;
                             ToroInitialThree(m_vec_dU);
                             break;
-                        
+
                         case InitialCondition::TORO_INIT_FOUR:
                             m_dTimeEnd = 0.035;
                             ToroInitialFour(m_vec_dU);
                             break;
-                        
+
                         case InitialCondition::TORO_INIT_FIVE:
                             m_dTimeEnd = 0.035;
                             ToroInitialFive(m_vec_dU);
                             break;
-                        
+
                         case InitialCondition::SINE_WAVE:
                             m_dTimeEnd = 1.0;
                             InitialSineWave(m_vec_dU);
@@ -258,7 +258,7 @@ class Simulation
                         case ProgressionMethod::LAXFRIEDRICHS:
                             m_ProgressionFunction = &Simulation::m_fvm_LaxFriedrichs;
                             break;
-                        
+
                         case ProgressionMethod::RICHTMYER:
                             m_ProgressionFunction = &Simulation::m_fvm_Richtmyer;
                             break;
@@ -266,14 +266,14 @@ class Simulation
                         case ProgressionMethod::FORCE:
                             m_ProgressionFunction = &Simulation::m_fvm_FORCE;
                             break;
-                        
+
                         default:
                             m_ProgressionFunction = &Simulation::m_fvm_FORCE;
                             break;
                     }
 
             }
-        
+
         void SetLimitingFunction()
             {
                 switch (m_eSlopeLimiter)
@@ -293,7 +293,7 @@ class Simulation
                         case SlopeLimiter::MINBEE:
                             m_LimitingFunction = &Simulation::m_SL_Minbee;
                             break;
-                        
+
                         default:
                             m_LimitingFunction = &Simulation::m_SL_Minbee;
                             break;
@@ -305,6 +305,6 @@ class Simulation
                 m_vec_dU[0] = m_vec_dU[1];
                 m_vec_dU[m_iNumGhostCells + m_iNumPoints - 1] = m_vec_dU[m_iNumPoints];
             }
-            
+
         void Evolve();
 };
