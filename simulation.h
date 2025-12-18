@@ -305,6 +305,6 @@ class Simulation
                 m_vec_dU[0] = m_vec_dU[1];
                 m_vec_dU[m_iNumGhostCells + m_iNumPoints - 1] = m_vec_dU[m_iNumPoints];
             }
-
+            
         void Evolve();
 };
