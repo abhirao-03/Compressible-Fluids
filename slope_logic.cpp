@@ -153,21 +153,3 @@ vec3 Simulation::m_SL_Minbee(const int& l_iIterValue)
         
         return l_vResults;
     }
-
-void Simulation::m_ReconstructData()
-    {
-        for (int i = 1; i < m_vec_dU.size() - 2; i++)
-            {
-                vec3 l_dLimiter = (this->*m_LimitingFunction)(i);
-                vec3 l_SlopeMeasure = GetSlopeMeasure(i);
-
-                vec3 l_dDeltaNumerator = m_vec_dU[i+1] - m_vec_dU[i];
-                vec3 l_dDeltaDenominator = m_vec_dU[i] - m_vec_dU[i-1];
-
-                vec3 l_vec3ULeft = m_vec_dU[i] - (1.0/2.0) * (l_dLimiter * l_SlopeMeasure);
-                vec3 l_vec3URight = m_vec_dU[i] + (1.0/2.0) * (l_dLimiter * l_SlopeMeasure);
-
-                m_vec_LeftReconstructed[i] = l_vec3ULeft;
-                m_vec_RightReconstructed[i] = l_vec3URight;
-            }
-    }

@@ -14,18 +14,6 @@ void Simulation::Evolve()
             {
                 SetBoundaryConditions();
                 SetTimeStep();
-
-                if (m_eProgressionMethod == ProgressionMethod::FORCE)
-                    {
-                        m_ReconstructData();
-                        m_CalculateFluxesFromReconstruction();
-                    }
-                else
-                    {
-                        (this->*m_ProgressionFunction)(m_vec_dU, m_vec_dFluxes);        
-                    }
-
-                
     
                 t += m_dDeltaT;
 
@@ -33,7 +21,7 @@ void Simulation::Evolve()
 
                 for (int i = 1; i < m_vec_dU.size() - 1; i++)
                     {
-                        double x = m_dXStart + (i - 0.5) * m_dDeltaX;
+                        double x = m_dXStart + (i - m_iNumGhostCells + 0.5) * m_dDeltaX;
                         
                         m_vec_dUNext[i] = m_vec_dU[i] - (m_dDeltaT / m_dDeltaX) * (m_vec_dFluxes[i] - m_vec_dFluxes[i - 1]);
 
