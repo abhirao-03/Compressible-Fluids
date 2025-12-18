@@ -1,16 +1,12 @@
 remove-gifs :
-	rm *.gif
+	rm -f *.gif
 
 clean :
-	rm *.dat *.out *.h.*
+	rm -f *.dat *.out *.h.*
 
-executable : main.cpp simulation.h fluxes.cpp helpers.cpp initials.cpp iterate.cpp
-	g++ main.cpp simulation.h fluxes.cpp helpers.cpp initials.cpp iterate.cpp
-	rm *.h.*
-
-sim_FORCE : main.cpp simulation.h fluxes.cpp helpers.cpp initials.cpp iterate.cpp slope_logic.cpp limiters.cpp
+sim_SLIC : main.cpp simulation.h fluxes.cpp helpers.cpp initials.cpp iterate.cpp slope_logic.cpp limiters.cpp
 	g++ main.cpp simulation.h fluxes.cpp helpers.cpp initials.cpp iterate.cpp slope_logic.cpp limiters.cpp
-	echo 5 | ./a.out > flux.dat
-	gnuplot plotting.gp
-	mv name_holder.gif visualisations/
+	echo 9 | ./a.out > flux.dat
+	-gnuplot plotting.gp
+	mv name_holder.gif visualisations/SLICToroFive.gif
 	make clean
