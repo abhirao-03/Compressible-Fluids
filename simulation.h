@@ -13,37 +13,18 @@ class Simulation
         double m_dTimeEnd;
 
         int m_iNumPoints;
-        int m_iNumGhostCells;
 
         double m_dDeltaX;
-        double m_dRelaxation;
         double m_dDeltaT;
 
         double m_dGamma = 1.4;
-        double m_dOmega = 0.0;
 
         std::vector<vec3> m_vec_dU;
         std::vector<vec3> m_vec_dFluxes;
-
-        std::vector<vec3> m_vec_LeftReconstructed;
-        std::vector<vec3> m_vec_RightReconstructed;
-        std::vector<vec3> m_vec_dFluxesReconstructed;
-    
         std::vector<vec3> m_vec_dUNext;
         
 
-
-        // ---------------------------------- The following was implemented using Copilot ----------------------------------
-
-        // using ProgressionFunction = void (Simulation::*)(std::vector<vec3>& vec_dInputVector, std::vector<vec3>& vec_dUpdateVector);
-        // ProgressionFunction m_ProgressionFunction = nullptr;
-
-        using LimitingFunction = vec3 (Simulation::*)(const int& l_iIterValue);
-        LimitingFunction m_LimitingFunction = nullptr;
-
-        // ------------------------------------------------------------------------------------------------------------------
-
-        public:
+    public:
 
         enum class InitialCondition
             {
@@ -59,25 +40,16 @@ class Simulation
                 SINE_WAVE = 10
             };
 
-        // enum ProgressionMethod
-        //     {
-        //         LAXFRIEDRICHS = 1,
-        //         RICHTMYER = 2,
-        //         FORCE = 3
-        //     };
-
         InitialCondition m_eInitialCondition;
 
-        // member initialization
+        // MEMBER INITIALISATION -------------------------------------------------------------------------------
         Simulation(
                     double dxStart,
                     double dxEnd,
                     double dTimeStart,
                     double dTimeEnd,
-                    double dRelaxation,
                     double dGamma,
                     int iNumPoints,
-                    int iNumGhostCells,
                     InitialCondition eInitialCondition
                 )
             :
@@ -85,24 +57,19 @@ class Simulation
             m_dXEnd(dxEnd),
             m_dTimeStart(dTimeStart),
             m_dTimeEnd(dTimeEnd),
-            m_dRelaxation(dRelaxation),
             m_dGamma(dGamma),
-            m_iNumPoints(iNumPoints),
-            m_iNumGhostCells(iNumGhostCells),
             m_eInitialCondition(eInitialCondition)
             {
                 m_dDeltaX = (m_dXEnd - m_dXStart) / m_iNumPoints;
-                m_dDeltaT = m_dRelaxation * m_dDeltaX;
-
-                m_vec_dU.resize(m_iNumGhostCells + m_iNumPoints);
-                m_vec_dFluxes.resize(m_iNumGhostCells + m_iNumPoints);
-                m_vec_LeftReconstructed.resize(m_iNumGhostCells + m_iNumPoints);
-                m_vec_RightReconstructed.resize(m_iNumGhostCells + m_iNumPoints);
-                m_vec_dFluxesReconstructed.resize(m_iNumGhostCells + m_iNumPoints);
-                m_vec_dUNext.resize(m_iNumGhostCells + m_iNumPoints);
+                m_vec_dU.resize(m_iNumPoints);
+                m_vec_dFluxes.resize(m_iNumPoints);
+                m_vec_dUNext.resize(m_iNumPoints);
 
             }
+        // -----------------------------------------------------------------------------------------------------
 
+
+        // INITIAL CONDITION -----------------------------------------------------------------------------------
         void InitialOne(std::vector<vec3>& vec_dU);
         void InitialTwo(std::vector<vec3>& vec_dU);
         void InitialThree(std::vector<vec3>& vec_dU);
@@ -119,55 +86,6 @@ class Simulation
         void m_fvm_LaxFriedrichs(std::vector<vec3>& vec_dInputVector, std::vector<vec3>& vec_dUpdateVector);
         void m_fvm_Richtmyer(std::vector<vec3>& vec_dInputVector, std::vector<vec3>& vec_dUpdateVector);
         void m_fvm_FORCE(std::vector<vec3>& vec_dInputVector, std::vector<vec3>& vec_dUpdateVector);
-
-        void GetU();
-        double GetEnergy(const double& u_dDensity, const double& u_dVelocity, const double& u_dPressure);
-
-        vec3 m_GetPrimitives(const vec3& f_vec3_U);
-        
-        vec3 m_EulerFluxFunction(const vec3& f_vec3_U)
-            {
-                vec3 prims = m_GetPrimitives(f_vec3_U);
-
-                double& h_dDensity = prims[0];
-                double& h_dVelocity = prims[1];
-                double& h_dPressure = prims[2];
-
-                double d_FirstFlux = h_dDensity * h_dVelocity;
-                double d_SecondFlux = h_dDensity * pow(h_dVelocity, 2.0) + h_dPressure;
-                double d_ThirdFlux = (f_vec3_U[2] + h_dPressure) * h_dVelocity;
-
-                return vec3(d_FirstFlux, d_SecondFlux, d_ThirdFlux);
-            }
-
-        void SetTimeStep()
-            {
-                double f_dMaxInformationSpeed = 0.0;
-
-                for (int i = 1; i < m_vec_dU.size() - 1; i++)
-                    {
-                        vec3 l_vec3_Primitive = m_GetPrimitives(m_vec_dU[i]);
-                        double l_dDensity = l_vec3_Primitive[0];
-                        double l_dVelocity   = l_vec3_Primitive[1];
-                        double l_dPressure   = l_vec3_Primitive[2];
-
-                        double l_dSoundSpeed = std::sqrt(m_dGamma * l_dPressure / l_dDensity);
-
-                        double l_dCurrentMax = std::abs(l_dVelocity) + l_dSoundSpeed;
-
-                        if (l_dCurrentMax > f_dMaxInformationSpeed)
-                            {
-                                f_dMaxInformationSpeed = l_dCurrentMax;
-                            }
-                    };
-
-                if (f_dMaxInformationSpeed > 0.0)
-                {
-                    m_dDeltaT = m_dRelaxation * m_dDeltaX / f_dMaxInformationSpeed;
-                } else  {
-                    m_dDeltaT = 1e-4;
-                }
-            }
 
         void SetInitialCondition()
             {
@@ -221,12 +139,20 @@ class Simulation
 
                     }
             }
+        // -------------------------------------------------------------------------------------------------------------
+        
 
-        void SetBoundaryConditions()
-            {
-                m_vec_dU[0] = m_vec_dU[1];
-                m_vec_dU[m_iNumGhostCells + m_iNumPoints - 1] = m_vec_dU[m_iNumPoints];
-            }
 
+        // PHYSICS -----------------------------------------------------------------------------------------------------
+        void m_GetU();
+        double m_GetEnergy(const double& u_dDensity, const double& u_dVelocity, const double& u_dPressure);
+        vec3 m_GetPrimitives(const vec3& f_vec3_U);
+        vec3 m_EulerFluxFunction(const vec3& f_vec3_U);
+        // -------------------------------------------------------------------------------------------------------------
+
+
+
+        // ITERATOR ----------------------------------------------------------------------------------------------------
         void Evolve();
+        // -------------------------------------------------------------------------------------------------------------
 };

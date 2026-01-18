@@ -1,7 +1,7 @@
 #include <iostream>
 #include "simulation.h"
 
-void Simulation::GetU()
+void Simulation::m_GetU()
     {
         for (int i = 0; i < m_vec_dU.size(); i++)
             {
@@ -20,7 +20,23 @@ vec3 Simulation::m_GetPrimitives(const vec3& f_vec3_U)
         return vec3(density, velocity, pressure);
     }
 
-double Simulation::GetEnergy(const double& u_dDensity, const double& u_dVelocity, const double& u_dPressure)
+double Simulation::m_GetEnergy(const double& u_dDensity, const double& u_dVelocity, const double& u_dPressure)
     {
         return u_dPressure/(m_dGamma - 1.0) + (1.0/2.0) * (u_dDensity) * (pow(u_dVelocity, 2.0));
     }
+
+    
+vec3 Simulation::m_EulerFluxFunction(const vec3& f_vec3_U)
+            {
+                vec3 prims = m_GetPrimitives(f_vec3_U);
+
+                double& h_dDensity = prims[0];
+                double& h_dVelocity = prims[1];
+                double& h_dPressure = prims[2];
+
+                double d_FirstFlux = h_dDensity * h_dVelocity;
+                double d_SecondFlux = h_dDensity * pow(h_dVelocity, 2.0) + h_dPressure;
+                double d_ThirdFlux = (f_vec3_U[2] + h_dPressure) * h_dVelocity;
+
+                return vec3(d_FirstFlux, d_SecondFlux, d_ThirdFlux);
+            }
