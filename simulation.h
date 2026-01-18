@@ -66,17 +66,7 @@ class Simulation
         //         FORCE = 3
         //     };
 
-        enum SlopeLimiter
-            {
-                SUPERBEE = 1,
-                VAN_LEER = 2,
-                VAN_ALBADA = 3,
-                MINBEE = 4
-            };
-
         InitialCondition m_eInitialCondition;
-        // ProgressionMethod m_eProgressionMethod;
-        SlopeLimiter m_eSlopeLimiter;
 
         // member initialization
         Simulation(
@@ -88,9 +78,7 @@ class Simulation
                     double dGamma,
                     int iNumPoints,
                     int iNumGhostCells,
-                    InitialCondition eInitialCondition,
-                    // ProgressionMethod eProgressionMethod,
-                    SlopeLimiter eSlopeLimiter
+                    InitialCondition eInitialCondition
                 )
             :
             m_dXStart(dxStart),
@@ -101,9 +89,7 @@ class Simulation
             m_dGamma(dGamma),
             m_iNumPoints(iNumPoints),
             m_iNumGhostCells(iNumGhostCells),
-            m_eInitialCondition(eInitialCondition),
-            // m_eProgressionMethod(eProgressionMethod),
-            m_eSlopeLimiter(eSlopeLimiter)
+            m_eInitialCondition(eInitialCondition)
             {
                 m_dDeltaX = (m_dXEnd - m_dXStart) / m_iNumPoints;
                 m_dDeltaT = m_dRelaxation * m_dDeltaX;
@@ -134,22 +120,10 @@ class Simulation
         void m_fvm_Richtmyer(std::vector<vec3>& vec_dInputVector, std::vector<vec3>& vec_dUpdateVector);
         void m_fvm_FORCE(std::vector<vec3>& vec_dInputVector, std::vector<vec3>& vec_dUpdateVector);
 
-        vec3 m_SL_Superbee(const int& l_iIterValue);
-        vec3 m_SL_VanLeer(const int& l_iIterValue);
-        vec3 m_SL_VanAlbada(const int& l_iIterValue);
-        vec3 m_SL_Minbee(const int& l_iIterValue);
-
-
         void GetU();
         double GetEnergy(const double& u_dDensity, const double& u_dVelocity, const double& u_dPressure);
 
         vec3 m_GetPrimitives(const vec3& f_vec3_U);
-        vec3 m_GetSlopeLimitingR(const int& l_iIterValue);
-        vec3 m_GetSlopeMeasure(const int& t_iCellValue);
-
-        void m_ReconstructData();
-        void m_GetReconstructedFluxes();
-        void m_EvolveHalfTimeStep();
         
         vec3 m_EulerFluxFunction(const vec3& f_vec3_U)
             {
@@ -245,55 +219,6 @@ class Simulation
                             InitialSineWave(m_vec_dU);
                             break;
 
-                    }
-            }
-
-        // void SetProgressionMethod()
-        //     {
-        //         switch (m_eProgressionMethod)
-        //             {
-        //                 case ProgressionMethod::LAXFRIEDRICHS:
-        //                     m_ProgressionFunction = &Simulation::m_fvm_LaxFriedrichs;
-        //                     break;
-
-        //                 case ProgressionMethod::RICHTMYER:
-        //                     m_ProgressionFunction = &Simulation::m_fvm_Richtmyer;
-        //                     break;
-
-        //                 case ProgressionMethod::FORCE:
-        //                     m_ProgressionFunction = &Simulation::m_fvm_FORCE;
-        //                     break;
-
-        //                 default:
-        //                     m_ProgressionFunction = &Simulation::m_fvm_FORCE;
-        //                     break;
-        //             }
-
-        //     }
-
-        void SetLimitingFunction()
-            {
-                switch (m_eSlopeLimiter)
-                    {
-                        case SlopeLimiter::SUPERBEE:
-                            m_LimitingFunction = &Simulation::m_SL_Superbee;
-                            break;
-
-                        case SlopeLimiter::VAN_LEER:
-                            m_LimitingFunction = &Simulation::m_SL_VanLeer;
-                            break;
-
-                        case SlopeLimiter::VAN_ALBADA:
-                            m_LimitingFunction = &Simulation::m_SL_VanAlbada;
-                            break;
-
-                        case SlopeLimiter::MINBEE:
-                            m_LimitingFunction = &Simulation::m_SL_Minbee;
-                            break;
-
-                        default:
-                            m_LimitingFunction = &Simulation::m_SL_Minbee;
-                            break;
                     }
             }
 
