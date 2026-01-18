@@ -6,7 +6,7 @@ void Simulation::InitialOne(std::vector<vec3>& vec_dU)
         double l_dVelocity = 0.0;
         double l_dPressure = 1.0;
 
-        double l_dEnergy = GetEnergy(l_dDensity, l_dVelocity, l_dPressure);
+        double l_dEnergy = m_GetEnergy(l_dDensity, l_dVelocity, l_dPressure);
 
         for (vec3& l_vec3ConservedVars : vec_dU)
             {
@@ -22,7 +22,7 @@ void Simulation::InitialTwo(std::vector<vec3>& vec_dU)
         double l_dVelocity = 1.0;
         double l_dPressure = 3.0;
 
-        double l_dEnergy = GetEnergy(l_dDensity, l_dVelocity, l_dPressure);
+        double l_dEnergy = m_GetEnergy(l_dDensity, l_dVelocity, l_dPressure);
         
         for (vec3& l_vec3ConservedVars : vec_dU)
             {
@@ -37,12 +37,12 @@ void Simulation::InitialThree(std::vector<vec3>& vec_dU)
         double l_dLeftDensity = 1.0;
         double l_dLeftVelocity = 0.0;
         double l_dLeftPressure = 1.0;
-        double l_dLeftEnergy = GetEnergy(l_dLeftDensity, l_dLeftVelocity, l_dLeftPressure);
+        double l_dLeftEnergy = m_GetEnergy(l_dLeftDensity, l_dLeftVelocity, l_dLeftPressure);
 
         double l_dRightDensity = 0.1;
         double l_dRightVelocity = 0.0;
         double l_dRightPressure = 1.0;
-        double l_dRightEnergy = GetEnergy(l_dRightDensity, l_dRightVelocity, l_dRightPressure);
+        double l_dRightEnergy = m_GetEnergy(l_dRightDensity, l_dRightVelocity, l_dRightPressure);
 
         double l_dDiscontinuityLocation = 0.5;
 
@@ -70,12 +70,12 @@ void Simulation::InitialFour(std::vector<vec3>& vec_dU)
         double l_dLeftDensity = 1.0;
         double l_dLeftVelocity = 1.0;
         double l_dLeftPressure = 1.0;
-        double l_dLeftEnergy = GetEnergy(l_dLeftDensity, l_dLeftVelocity, l_dLeftPressure);
+        double l_dLeftEnergy = m_GetEnergy(l_dLeftDensity, l_dLeftVelocity, l_dLeftPressure);
 
         double l_dRightDensity = 0.1;
         double l_dRightVelocity = 1.0;
         double l_dRightPressure = 1.0;
-        double l_dRightEnergy = GetEnergy(l_dRightDensity, l_dRightVelocity, l_dRightPressure);
+        double l_dRightEnergy = m_GetEnergy(l_dRightDensity, l_dRightVelocity, l_dRightPressure);
 
         double l_dDiscontinuityLocation = 0.25;
 
@@ -103,12 +103,12 @@ void Simulation::ToroInitialOne(std::vector<vec3>& vec_dU)
         double l_dLeftDensity = 1.0;
         double l_dLeftVelocity = 0.0;
         double l_dLeftPressure = 1.0;
-        double l_dLeftEnergy = GetEnergy(l_dLeftDensity, l_dLeftVelocity, l_dLeftPressure);
+        double l_dLeftEnergy = m_GetEnergy(l_dLeftDensity, l_dLeftVelocity, l_dLeftPressure);
 
         double l_dRightDensity = 0.125;
         double l_dRightVelocity = 0.0;
         double l_dRightPressure = 0.1;
-        double l_dRightEnergy = GetEnergy(l_dRightDensity, l_dRightVelocity, l_dRightPressure);
+        double l_dRightEnergy = m_GetEnergy(l_dRightDensity, l_dRightVelocity, l_dRightPressure);
 
         double l_dDiscontinuityLocation = 0.5;
 
@@ -137,12 +137,12 @@ void Simulation::ToroInitialTwo(std::vector<vec3>& vec_dU)
         double l_dLeftDensity = 1.0;
         double l_dLeftVelocity = -2.0;
         double l_dLeftPressure = 0.4;
-        double l_dLeftEnergy = GetEnergy(l_dLeftDensity, l_dLeftVelocity, l_dLeftPressure);
+        double l_dLeftEnergy = m_GetEnergy(l_dLeftDensity, l_dLeftVelocity, l_dLeftPressure);
 
         double l_dRightDensity = 1.0;
         double l_dRightVelocity = 2.0;
         double l_dRightPressure = 0.4;
-        double l_dRightEnergy = GetEnergy(l_dRightDensity, l_dRightVelocity, l_dRightPressure);
+        double l_dRightEnergy = m_GetEnergy(l_dRightDensity, l_dRightVelocity, l_dRightPressure);
 
         double l_dDiscontinuityLocation = 0.5;
 
@@ -170,12 +170,12 @@ void Simulation::ToroInitialThree(std::vector<vec3>& vec_dU)
         double l_dLeftDensity = 1.0;
         double l_dLeftVelocity = 0.0;
         double l_dLeftPressure = 1000.0;
-        double l_dLeftEnergy = GetEnergy(l_dLeftDensity, l_dLeftVelocity, l_dLeftPressure);
+        double l_dLeftEnergy = m_GetEnergy(l_dLeftDensity, l_dLeftVelocity, l_dLeftPressure);
 
         double l_dRightDensity = 1.0;
         double l_dRightVelocity = 0.0;
         double l_dRightPressure = 0.01;
-        double l_dRightEnergy = GetEnergy(l_dRightDensity, l_dRightVelocity, l_dRightPressure);
+        double l_dRightEnergy = m_GetEnergy(l_dRightDensity, l_dRightVelocity, l_dRightPressure);
 
         double l_dDiscontinuityLocation = 0.5;
 
@@ -203,12 +203,12 @@ void Simulation::ToroInitialFour(std::vector<vec3>& vec_dU)
         double l_dLeftDensity = 1.0;
         double l_dLeftVelocity = 0.0;
         double l_dLeftPressure = 0.01;
-        double l_dLeftEnergy = GetEnergy(l_dLeftDensity, l_dLeftVelocity, l_dLeftPressure);
+        double l_dLeftEnergy = m_GetEnergy(l_dLeftDensity, l_dLeftVelocity, l_dLeftPressure);
 
         double l_dRightDensity = 1.0;
         double l_dRightVelocity = 0.0;
         double l_dRightPressure = 100.0;
-        double l_dRightEnergy = GetEnergy(l_dRightDensity, l_dRightVelocity, l_dRightPressure);
+        double l_dRightEnergy = m_GetEnergy(l_dRightDensity, l_dRightVelocity, l_dRightPressure);
 
         double l_dDiscontinuityLocation = 0.5;
 
@@ -236,12 +236,12 @@ void Simulation::ToroInitialFive(std::vector<vec3>& vec_dU)
         double l_dLeftDensity = 5.99924;
         double l_dLeftVelocity = 19.5975;
         double l_dLeftPressure = 460.894;
-        double l_dLeftEnergy = GetEnergy(l_dLeftDensity, l_dLeftVelocity, l_dLeftPressure);
+        double l_dLeftEnergy = m_GetEnergy(l_dLeftDensity, l_dLeftVelocity, l_dLeftPressure);
 
         double l_dRightDensity = 5.99242;
         double l_dRightVelocity = -6.19633;
         double l_dRightPressure = 46.0950;
-        double l_dRightEnergy = GetEnergy(l_dRightDensity, l_dRightVelocity, l_dRightPressure);
+        double l_dRightEnergy = m_GetEnergy(l_dRightDensity, l_dRightVelocity, l_dRightPressure);
 
         double l_dDiscontinuityLocation = 0.5;
 
@@ -282,7 +282,7 @@ void Simulation::InitialSineWave(std::vector<vec3>& vec_dU)
         double l_dDensity = 1.0 + 0.2 * sin(2.0 * PI * l_dXVal);
 
         // Calculate Energy
-        double l_dEnergy = GetEnergy(l_dDensity, l_dVelocity, l_dPressure);
+        double l_dEnergy = m_GetEnergy(l_dDensity, l_dVelocity, l_dPressure);
 
         // Set Conserved Variables
         l_vec3ConservedVars[0] = l_dDensity;
