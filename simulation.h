@@ -70,71 +70,67 @@ class Simulation
 
 
         // INITIAL CONDITION -----------------------------------------------------------------------------------
-        void InitialOne(std::vector<vec3>& vec_dU);
-        void InitialTwo(std::vector<vec3>& vec_dU);
-        void InitialThree(std::vector<vec3>& vec_dU);
-        void InitialFour(std::vector<vec3>& vec_dU);
+        void m_InitialOne(std::vector<vec3>& vec_dU);
+        void m_InitialTwo(std::vector<vec3>& vec_dU);
+        void m_InitialThree(std::vector<vec3>& vec_dU);
+        void m_InitialFour(std::vector<vec3>& vec_dU);
 
-        void ToroInitialOne(std::vector<vec3>& vec_dU);
-        void ToroInitialTwo(std::vector<vec3>& vec_dU);
-        void ToroInitialThree(std::vector<vec3>& vec_dU);
-        void ToroInitialFour(std::vector<vec3>& vec_dU);
-        void ToroInitialFive(std::vector<vec3>& vec_dU);
+        void m_ToroInitialOne(std::vector<vec3>& vec_dU);
+        void m_ToroInitialTwo(std::vector<vec3>& vec_dU);
+        void m_ToroInitialThree(std::vector<vec3>& vec_dU);
+        void m_ToroInitialFour(std::vector<vec3>& vec_dU);
+        void m_ToroInitialFive(std::vector<vec3>& vec_dU);
 
-        void InitialSineWave(std::vector<vec3>& vec_dU);
+        void m_InitialSineWave(std::vector<vec3>& vec_dU);
 
-        void m_fvm_LaxFriedrichs(std::vector<vec3>& vec_dInputVector, std::vector<vec3>& vec_dUpdateVector);
-        void m_fvm_Richtmyer(std::vector<vec3>& vec_dInputVector, std::vector<vec3>& vec_dUpdateVector);
-        void m_fvm_FORCE(std::vector<vec3>& vec_dInputVector, std::vector<vec3>& vec_dUpdateVector);
-
-        void SetInitialCondition()
+        void m_SetInitialCondition()
             {
                 switch (m_eInitialCondition)
                     {
                         case InitialCondition::INITIAL_ONE:
-                            InitialOne(m_vec_dU);
+                            m_InitialOne(m_vec_dU);
                             break;
 
                         case InitialCondition::INITIAL_TWO:
-                            InitialTwo(m_vec_dU);
+                            m_InitialTwo(m_vec_dU);
                             break;
 
                         case InitialCondition::INITIAL_THREE:
-                            InitialThree(m_vec_dU);
+                            m_InitialThree(m_vec_dU);
                             break;
 
                         case InitialCondition::INITIAL_FOUR:
-                            InitialFour(m_vec_dU);
+                            m_InitialFour(m_vec_dU);
                             break;
 
                         case InitialCondition::TORO_INIT_ONE:
                             m_dTimeEnd = 0.25;
-                            ToroInitialOne(m_vec_dU);
+                            m_ToroInitialOne(m_vec_dU);
                             break;
 
                         case InitialCondition::TORO_INIT_TWO:
                             m_dTimeEnd = 0.15;
-                            ToroInitialTwo(m_vec_dU);
+                            m_ToroInitialTwo(m_vec_dU);
                             break;
 
                         case InitialCondition::TORO_INIT_THREE:
                             m_dTimeEnd = 0.012;
-                            ToroInitialThree(m_vec_dU);
+                            m_ToroInitialThree(m_vec_dU);
                             break;
 
                         case InitialCondition::TORO_INIT_FOUR:
                             m_dTimeEnd = 0.035;
-                            ToroInitialFour(m_vec_dU);
+                            m_ToroInitialFour(m_vec_dU);
                             break;
 
                         case InitialCondition::TORO_INIT_FIVE:
                             m_dTimeEnd = 0.035;
-                            ToroInitialFive(m_vec_dU);
+                            m_ToroInitialFive(m_vec_dU);
                             break;
 
                         case InitialCondition::SINE_WAVE:
                             m_dTimeEnd = 1.0;
-                            InitialSineWave(m_vec_dU);
+                            m_InitialSineWave(m_vec_dU);
                             break;
 
                     }
@@ -153,6 +149,6 @@ class Simulation
 
 
         // ITERATOR ----------------------------------------------------------------------------------------------------
-        void Evolve();
+        void m_Evolve();
         // -------------------------------------------------------------------------------------------------------------
 };

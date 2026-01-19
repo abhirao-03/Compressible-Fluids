@@ -19,7 +19,7 @@ int main(){
 
     Simulation EulerEquations = Simulation(u_X0, u_X1, u_T0, u_TEND, u_GAMMA, u_NUMPOINTS, u_eInitialCondition);
 
-    EulerEquations.Evolve();
+    EulerEquations.m_Evolve();
 
     return 0;
 }

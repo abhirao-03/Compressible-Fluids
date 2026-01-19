@@ -1,6 +1,6 @@
 #include "simulation.h"
 
-void Simulation::InitialOne(std::vector<vec3>& vec_dU)
+void Simulation::m_InitialOne(std::vector<vec3>& vec_dU)
     {
         double l_dDensity = 1.0;
         double l_dVelocity = 0.0;
@@ -16,7 +16,7 @@ void Simulation::InitialOne(std::vector<vec3>& vec_dU)
             }
     }
 
-void Simulation::InitialTwo(std::vector<vec3>& vec_dU)
+void Simulation::m_InitialTwo(std::vector<vec3>& vec_dU)
     {
         double l_dDensity = 2.0;
         double l_dVelocity = 1.0;
@@ -32,7 +32,7 @@ void Simulation::InitialTwo(std::vector<vec3>& vec_dU)
             }
     }
 
-void Simulation::InitialThree(std::vector<vec3>& vec_dU)
+void Simulation::m_InitialThree(std::vector<vec3>& vec_dU)
     {
         double l_dLeftDensity = 1.0;
         double l_dLeftVelocity = 0.0;
@@ -65,7 +65,7 @@ void Simulation::InitialThree(std::vector<vec3>& vec_dU)
             }
     }
 
-void Simulation::InitialFour(std::vector<vec3>& vec_dU)
+void Simulation::m_InitialFour(std::vector<vec3>& vec_dU)
     {
         double l_dLeftDensity = 1.0;
         double l_dLeftVelocity = 1.0;
@@ -98,7 +98,7 @@ void Simulation::InitialFour(std::vector<vec3>& vec_dU)
             }
     }
 
-void Simulation::ToroInitialOne(std::vector<vec3>& vec_dU)
+void Simulation::m_ToroInitialOne(std::vector<vec3>& vec_dU)
     {
         double l_dLeftDensity = 1.0;
         double l_dLeftVelocity = 0.0;
@@ -132,7 +132,7 @@ void Simulation::ToroInitialOne(std::vector<vec3>& vec_dU)
     }
 
 
-void Simulation::ToroInitialTwo(std::vector<vec3>& vec_dU)
+void Simulation::m_ToroInitialTwo(std::vector<vec3>& vec_dU)
     {
         double l_dLeftDensity = 1.0;
         double l_dLeftVelocity = -2.0;
@@ -165,7 +165,7 @@ void Simulation::ToroInitialTwo(std::vector<vec3>& vec_dU)
             }
     }
 
-void Simulation::ToroInitialThree(std::vector<vec3>& vec_dU)
+void Simulation::m_ToroInitialThree(std::vector<vec3>& vec_dU)
     {
         double l_dLeftDensity = 1.0;
         double l_dLeftVelocity = 0.0;
@@ -198,7 +198,7 @@ void Simulation::ToroInitialThree(std::vector<vec3>& vec_dU)
             }
     }
 
-void Simulation::ToroInitialFour(std::vector<vec3>& vec_dU)
+void Simulation::m_ToroInitialFour(std::vector<vec3>& vec_dU)
     {
         double l_dLeftDensity = 1.0;
         double l_dLeftVelocity = 0.0;
@@ -231,7 +231,7 @@ void Simulation::ToroInitialFour(std::vector<vec3>& vec_dU)
             }
     }
 
-void Simulation::ToroInitialFive(std::vector<vec3>& vec_dU)
+void Simulation::m_ToroInitialFive(std::vector<vec3>& vec_dU)
     {
         double l_dLeftDensity = 5.99924;
         double l_dLeftVelocity = 19.5975;
@@ -264,7 +264,7 @@ void Simulation::ToroInitialFive(std::vector<vec3>& vec_dU)
             }
     }
 
-void Simulation::InitialSineWave(std::vector<vec3>& vec_dU)
+void Simulation::m_InitialSineWave(std::vector<vec3>& vec_dU)
 {
     // Parameters
     double l_dVelocity = 1.0;
