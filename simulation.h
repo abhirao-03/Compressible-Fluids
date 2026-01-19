@@ -17,14 +17,13 @@ class Simulation
         double m_dDeltaX;
         double m_dDeltaT;
 
-        double m_dGamma = 1.4;
-
         std::vector<vec3> m_vec_dU;
         std::vector<vec3> m_vec_dFluxes;
         std::vector<vec3> m_vec_dUNext;
         
 
     public:
+        double m_dGamma = 1.4;
 
         enum class InitialCondition
             {
@@ -144,6 +143,9 @@ class Simulation
         double m_GetEnergy(const double& u_dDensity, const double& u_dVelocity, const double& u_dPressure);
         vec3 m_GetPrimitives(const vec3& f_vec3_U);
         vec3 m_EulerFluxFunction(const vec3& f_vec3_U);
+        
+        double m_dRarefactionVelocityMovement(const vec3& u_vInputState, const double& u_dPressureGuess);
+        double m_dShockwaveVelocityMovement(const vec3& u_vPrimitiveInputState, const double& u_dPressureGuess);
         // -------------------------------------------------------------------------------------------------------------
 
 
