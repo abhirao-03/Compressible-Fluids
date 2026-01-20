@@ -131,21 +131,26 @@ class Simulation
                             m_dTimeEnd = 1.0;
                             m_InitialSineWave(m_vec_dU);
                             break;
-
                     }
             }
         // -------------------------------------------------------------------------------------------------------------
-        
 
 
         // PHYSICS -----------------------------------------------------------------------------------------------------
         void m_GetU();
-        double m_GetEnergy(const double& u_dDensity, const double& u_dVelocity, const double& u_dPressure);
         vec3 m_GetPrimitives(const vec3& f_vec3_U);
         vec3 m_EulerFluxFunction(const vec3& f_vec3_U);
+        double m_GetEnergy(const double& u_dDensity, const double& u_dVelocity, const double& u_dPressure);
         
         double m_dRarefactionVelocityMovement(const vec3& u_vInputState, const double& u_dPressureGuess);
+        double m_dDerivativeRVM(const vec3& u_vPrimitiveInputState, const double& u_dPressureGuess);
+        
         double m_dShockwaveVelocityMovement(const vec3& u_vPrimitiveInputState, const double& u_dPressureGuess);
+        double m_dDerivativeSVM(const vec3& u_vPrimitiveInputState, const double& u_dPressureGuess);
+        
+        double m_CalculateStarPressure(const vec3& u_vLeftPrimitiveState, const vec3& u_vRightPrimitiveState);
+        double m_CalculateStarVelocity(const vec3& u_vLeftPrimitiveState, const vec3& u_vRightPrimitiveState);
+        double m_CalculateStarDensity(const vec3& u_vLeftPrimitiveState, const vec3& u_vRightPrimitiveState);
         // -------------------------------------------------------------------------------------------------------------
 
 
