@@ -89,37 +89,50 @@ double Simulation::m_CalculateStarVelocity(const vec3& u_vLeftPrimitiveState, co
     {
         double f_dPressure = m_CalculateStarPressure(u_vLeftPrimitiveState, u_vRightPrimitiveState);
         
-        double f_dVelStar;
+        double f_dStarVel;
         
         if (f_dPressure > u_vLeftPrimitiveState[2])
             {
-                f_dVelStar = u_vLeftPrimitiveState[1] + m_dShockwaveVelocityMovement(u_vLeftPrimitiveState, f_dPressure);
+                f_dStarVel = u_vLeftPrimitiveState[1] - m_dShockwaveVelocityMovement(u_vLeftPrimitiveState, f_dPressure);
             }
         else
             {
-                f_dVelStar = u_vLeftPrimitiveState[1] + m_dRarefactionVelocityMovement(u_vLeftPrimitiveState, f_dPressure);
+                f_dStarVel = u_vLeftPrimitiveState[1] - m_dRarefactionVelocityMovement(u_vLeftPrimitiveState, f_dPressure);
             }
             
-        return f_dVelStar;
+        return f_dStarVel;
     }
     
-double Simulation::m_CalculateStarDensity(const vec3& u_vLeftPrimitiveState, const vec3& u_vRightPrimitiveState)
+std::vector<double> Simulation::m_CalculateStarDensities(const vec3& u_vLeftPrimitiveState, const vec3& u_vRightPrimitiveState)
     {
         double f_dPressure = m_CalculateStarPressure(u_vLeftPrimitiveState, u_vRightPrimitiveState);
         
-        double f_dDensityStar;
+        double f_dStarDensityLeft;
+        double f_dStarDensityRight;
         
-        if (f_dPressure > u_vLeftPrimitiveState[2])
+        if (f_dPressure <= u_vLeftPrimitiveState[2])
             {
-                double f_dNumerator = ((f_dPressure/u_vLeftPrimitiveState[1]) + (m_dGamma - 1)/(m_dGamma + 1));
-                double f_dDenominator = 1 + ((f_dPressure*(m_dGamma - 1)) / (u_vLeftPrimitiveState[2]*(m_dGamma + 1)))
+                f_dStarDensityLeft = u_vLeftPrimitiveState[0] * std::pow((f_dPressure/u_vLeftPrimitiveState[2]), 1/m_dGamma);
                 
-                return u_vLeftPrimitiveState[0] * 
             }
         else
             {
-                f_dVelStar = u_vLeftPrimitiveState[1] + m_dRarefactionVelocityMovement(u_vLeftPrimitiveState, f_dPressure);
+                f_dStarDensityLeft = u_vLeftPrimitiveState[0] * \
+                    ((f_dPressure/u_vLeftPrimitiveState[2]) + (m_dGamma - 1)/(m_dGamma + 1))/ \
+                    (1 + ((f_dPressure/u_vLeftPrimitiveState[2]) * (m_dGamma - 1)/(m_dGamma + 1)));
             }
             
-        return f_dVelStar;
+        if (f_dPressure <= u_vRightPrimitiveState[2])
+            {
+                f_dStarDensityRight = u_vRightPrimitiveState[0] * std::pow((f_dPressure/u_vRightPrimitiveState[2]), 1/m_dGamma);
+            }
+        else
+            {
+                f_dStarDensityRight = u_vRightPrimitiveState[0] * \
+                    ((f_dPressure/u_vRightPrimitiveState[2]) + (m_dGamma - 1)/(m_dGamma + 1))/ \
+                    (1 + ((f_dPressure/u_vRightPrimitiveState[2]) * (m_dGamma - 1)/(m_dGamma + 1)));
+            }
+        
+        return {f_dStarDensityLeft, f_dStarDensityRight};
     }
+

@@ -40,3 +40,33 @@ vec3 Simulation::m_EulerFluxFunction(const vec3& f_vec3_U)
 
                 return vec3(d_FirstFlux, d_SecondFlux, d_ThirdFlux);
             }
+            
+void Simulation::m_GetInitialStates(vec3& r_vLeft, vec3& r_vRight, double& r_dX0)
+    {
+        switch (m_eInitialCondition)
+            {
+                default:
+                    r_vLeft[0] = 1.0;
+                    r_vLeft[1] = 0.0;
+                    r_vLeft[2] = 1.0;
+                    
+                    r_vRight[0] = 0.125;
+                    r_vRight[1] = 0.0;
+                    r_vRight[2] = 0.1;
+                    
+                    r_dX0 = 0.5;
+                    
+                    break;
+            
+                case InitialCondition::TORO_INIT_TWO:
+                    r_vLeft[0] = 1.0;
+                    r_vLeft[1] = -2.0;
+                    r_vLeft[2] = 0.4;
+                    
+                    r_vRight[0] = 1.0;
+                    r_vRight[1] = 2.0;
+                    r_vRight[2] = 0.4;
+                    
+                    r_dX0 = 0.5;
+            }
+    }

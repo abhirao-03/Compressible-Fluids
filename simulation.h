@@ -150,9 +150,11 @@ class Simulation
         
         double m_CalculateStarPressure(const vec3& u_vLeftPrimitiveState, const vec3& u_vRightPrimitiveState);
         double m_CalculateStarVelocity(const vec3& u_vLeftPrimitiveState, const vec3& u_vRightPrimitiveState);
-        double m_CalculateStarDensity(const vec3& u_vLeftPrimitiveState, const vec3& u_vRightPrimitiveState);
+        std::vector<double> m_CalculateStarDensities(const vec3& u_vLeftPrimitiveState, const vec3& u_vRightPrimitiveState);
+        
+        vec3 m_GetExactSolution(double x, double t);
+        void m_GetInitialStates(vec3& r_vLeft, vec3& r_vRight, double& r_dX0);
         // -------------------------------------------------------------------------------------------------------------
-
 
 
         // ITERATOR ----------------------------------------------------------------------------------------------------
