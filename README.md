@@ -12,7 +12,7 @@ The development history is organized by **Practicals** across specific git branc
 ### 1. Linear Advection (Finite Difference)
 *   **Branch:** `main`
 *   **Practicals:** 1 & 2
-*   **Equation:** Linear Advection $\left(\frac{\partial u}{\partial t} + a \frac{\partial u}{\partial x} = 0\rght)$
+*   **Equation:** Linear Advection $\left(\frac{\partial u}{\partial t} + a \frac{\partial u}{\partial x} = 0\right)$
 *   **Description:** 
     Implementation of basic Finite Difference schemes (Forward-Time Central-Space, Upwind, etc.) to solve scalar transport problems. This stage established the foundations of discretization grids, time-stepping stability (CFL condition), and boundary handling.
 
