@@ -30,13 +30,13 @@ do for [i=0:N] {
     set format x ""
     set tmargin 2
     # Fix: If val is NaN, plot 0
-    plot 'flux.dat' index i using 1:(valid(2) ? $2 : 0) with lines ls 1 title "rho"
+    plot 'flux.dat' index i using 1:2 with lines ls 1 title "rho"
 
     # --- PLOT 2: VELOCITY (Column 3 / Column 2) ---
     set ylabel "Velocity"
     set yrange [*:*] 
     # Fix: Check if Density ($2) is almost zero to avoid division by zero
-    plot 'flux.dat' index i using 1:(abs($2) > 1e-9 ? $3/$2 : 0) with lines ls 2 title "v"
+    plot 'flux.dat' index i using 1:3 with lines ls 2 title "v"
 
     # --- PLOT 3: PRESSURE ---
     set ylabel "Pressure"
@@ -44,7 +44,7 @@ do for [i=0:N] {
     set format x "%g"
     set yrange [0:*]
     # Fix: Check if Density ($2) is almost zero before dividing
-    plot 'flux.dat' index i using 1:(abs($2) > 1e-9 ? (GAMMA-1)*($4 - 0.5*($3**2)/$2) : 0) with lines ls 3 title "P"
+    plot 'flux.dat' index i using 1:4 with lines ls 3 title "P"
 
     unset multiplot
 }

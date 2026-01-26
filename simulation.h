@@ -54,6 +54,7 @@ class Simulation
             m_dTimeStart(dTimeStart),
             m_dTimeEnd(dTimeEnd),
             m_dGamma(dGamma),
+            m_iNumPoints(iNumPoints),
             m_eInitialCondition(eInitialCondition)
             {
                 m_dDeltaX = (m_dXEnd - m_dXStart) / m_iNumPoints;

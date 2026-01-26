@@ -10,7 +10,7 @@ vec3 Simulation::m_GetExactSolution(double x, double t)
         
         double f_dStarPressure = m_CalculateStarPressure(r_vLeft, r_vRight);
         double f_dStarVelocity = m_CalculateStarVelocity(r_vLeft, r_vRight);
-        std::vector f_vStarDensities = m_CalculateStarDensities(r_vLeft, r_vRight);
+        std::vector<double> f_vStarDensities = m_CalculateStarDensities(r_vLeft, r_vRight);
         
         double f_dStarLeftDensity = f_vStarDensities[0];
         double f_dStarRightDensity = f_vStarDensities[1];

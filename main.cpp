@@ -6,7 +6,7 @@ int main(){
     double u_X1 = 1.0;
     
     double u_T0 = 0.0;
-    double u_TEND = 1.0;
+    double u_TEND = 0.25;
     
     double u_GAMMA = 1.4;
 

@@ -40,33 +40,75 @@ vec3 Simulation::m_EulerFluxFunction(const vec3& f_vec3_U)
 
                 return vec3(d_FirstFlux, d_SecondFlux, d_ThirdFlux);
             }
-            
+
 void Simulation::m_GetInitialStates(vec3& r_vLeft, vec3& r_vRight, double& r_dX0)
+{
+    switch (m_eInitialCondition)
     {
-        switch (m_eInitialCondition)
-            {
-                default:
-                    r_vLeft[0] = 1.0;
-                    r_vLeft[1] = 0.0;
-                    r_vLeft[2] = 1.0;
-                    
-                    r_vRight[0] = 0.125;
-                    r_vRight[1] = 0.0;
-                    r_vRight[2] = 0.1;
-                    
-                    r_dX0 = 0.5;
-                    
-                    break;
+        // Toro Test 1 (Sod Shock Tube)
+        case InitialCondition::TORO_INIT_ONE:
+        default: // Default to Test 1 to be safe
+            r_vLeft[0] = 1.0;
+            r_vLeft[1] = 0.0;
+            r_vLeft[2] = 1.0;
             
-                case InitialCondition::TORO_INIT_TWO:
-                    r_vLeft[0] = 1.0;
-                    r_vLeft[1] = -2.0;
-                    r_vLeft[2] = 0.4;
-                    
-                    r_vRight[0] = 1.0;
-                    r_vRight[1] = 2.0;
-                    r_vRight[2] = 0.4;
-                    
-                    r_dX0 = 0.5;
-            }
+            r_vRight[0] = 0.125;
+            r_vRight[1] = 0.0;
+            r_vRight[2] = 0.1;
+            
+            r_dX0 = 0.5;
+            break;
+
+        // Toro Test 2 (123 Problem / Expansion)
+        case InitialCondition::TORO_INIT_TWO:
+            r_vLeft[0] = 1.0;
+            r_vLeft[1] = -2.0;
+            r_vLeft[2] = 0.4;
+            
+            r_vRight[0] = 1.0;
+            r_vRight[1] = 2.0;
+            r_vRight[2] = 0.4;
+            
+            r_dX0 = 0.5;
+            break;
+
+        // Toro Test 3 (Strong Shock)
+        case InitialCondition::TORO_INIT_THREE:
+            r_vLeft[0] = 1.0;
+            r_vLeft[1] = 0.0;
+            r_vLeft[2] = 1000.0;
+            
+            r_vRight[0] = 1.0;
+            r_vRight[1] = 0.0;
+            r_vRight[2] = 0.01;
+            
+            r_dX0 = 0.5;
+            break;
+
+        // Toro Test 4 (Collision)
+        case InitialCondition::TORO_INIT_FOUR:
+            r_vLeft[0] = 1.0;
+            r_vLeft[1] = 0.0;
+            r_vLeft[2] = 0.01;
+            
+            r_vRight[0] = 1.0;
+            r_vRight[1] = 0.0;
+            r_vRight[2] = 100.0;
+            
+            r_dX0 = 0.5;
+            break;
+
+        // Toro Test 5 (Stationary Contact)
+        case InitialCondition::TORO_INIT_FIVE:
+            r_vLeft[0] = 5.99924;
+            r_vLeft[1] = 19.5975;
+            r_vLeft[2] = 460.894;
+            
+            r_vRight[0] = 5.99242;
+            r_vRight[1] = -6.19633;
+            r_vRight[2] = 46.0950;
+            
+            r_dX0 = 0.5;
+            break;
     }
+}

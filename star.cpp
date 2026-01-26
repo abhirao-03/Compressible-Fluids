@@ -47,6 +47,8 @@ double Simulation::m_CalculateStarPressure(const vec3& u_vLeftPrimitiveState, co
         
         for(int i = 0; i <= f_iIterations; i++)
             {
+                // std::cout << "On iteration " << i << std::endl;
+                
                 double f_dLeftFullValue;
                 double f_dLeftDerivative;
                 
