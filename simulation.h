@@ -17,10 +17,7 @@ class Simulation
         double m_dDeltaX;
         double m_dDeltaT;
 
-        std::vector<vec3> m_vec_dU;
-        std::vector<vec3> m_vec_dFluxes;
-        std::vector<vec3> m_vec_dUNext;
-        
+        std::vector<vec3> m_vec_dU;    
 
     public:
         double m_dGamma = 1.4;
@@ -61,9 +58,6 @@ class Simulation
             {
                 m_dDeltaX = (m_dXEnd - m_dXStart) / m_iNumPoints;
                 m_vec_dU.resize(m_iNumPoints);
-                m_vec_dFluxes.resize(m_iNumPoints);
-                m_vec_dUNext.resize(m_iNumPoints);
-
             }
         // -----------------------------------------------------------------------------------------------------
 
