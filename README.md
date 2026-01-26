@@ -11,7 +11,7 @@ The development history is organized by **Practicals** across specific git branc
 ### 1. Linear Advection (Finite Difference)
 *   **Branch:** `main`
 *   **Practicals:** 1 & 2
-*   **Equation:** Linear Advection ($\frac{\partial u}{\partial t} + a \frac{\partial u}{\partial x} = 0$)
+*   **Equation:** Linear Advection $\left(\frac{\partial u}{\partial t} + a \frac{\partial u}{\partial x} = 0\rght)$
 *   **Description:** 
     Implementation of basic Finite Difference schemes (Forward-Time Central-Space, Upwind, etc.) to solve scalar transport problems. This stage established the foundations of discretization grids, time-stepping stability (CFL condition), and boundary handling.
 
@@ -93,7 +93,7 @@ To build and run the solver from any specific branch:
 3.  **Run:**
     ```bash
     ./solver > flux.dat
-        # Select test case when prompted (e.g., 1 for Sod Shock Tube)
+    # Enter number to select test case (e.g., 5 for Toro Sod Shock Tube Test)
     ```
 4.  **Visualize:**
     ```bash
