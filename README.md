@@ -1,4 +1,5 @@
 # Compressible Fluid Dynamics: Hyperbolic PDE Solvers
+*This README.md was written with the aid of Gemini 3 Pro.*
 
 This repository contains a comprehensive suite of numerical and analytical solvers for Hyperbolic Partial Differential Equations (PDEs), developed as part of the **Numerical Methods for Compressible Fluid Dynamics** curriculum.
 
