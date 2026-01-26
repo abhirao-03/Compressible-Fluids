@@ -78,7 +78,7 @@ E
 = 0
 $$
 
-Where pressure is closed via the Ideal Gas Law: $p = (\gamma - 1)(E - \frac{1}{2}\rho u^2)$.
+Where pressure is closed via the Ideal Gas Law: $p = (\gamma - 1)\left(E - \frac{1}{2}\rho v^2\right)$.
 
 ## Visualization
 
