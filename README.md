@@ -61,7 +61,7 @@ The development history is organized by **Practicals** across specific git branc
 
 For branches `Euler-Equations`, `Euler-Slic`, and `Euler-Exact`, the system solved is:
 
-\[
+$$
 \frac{\partial}{\partial t}
 \begin{bmatrix}
 \rho \\
@@ -75,9 +75,8 @@ E
 \rho v^{2} + p \\
 (E + p)v
 \end{bmatrix}
-= 0.
-\]
-
+= 0
+$$
 
 Where pressure is closed via the Ideal Gas Law: $p = (\gamma - 1)(E - \frac{1}{2}\rho u^2)$.
 
