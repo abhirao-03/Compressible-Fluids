@@ -63,9 +63,9 @@ For branches `Euler-Equations`, `Euler-Slic`, and `Euler-Exact`, the system solv
 
 $$
 \frac{\partial}{\partial t}
-\begin{pmatrix} \rho \\ \rho u \\ E \end{pmatrix} +
+\left[\begin{array} \rho \\ \rho v \\ E \end{array}\right] +
 \frac{\partial}{\partial x}
-\begin{pmatrix} \rho u \\ \rho u^2 + p \\ u(E + p) \end{pmatrix} = 0
+\left[\begin{array} \rho v \\ \rho v^2 + p \\ (E + p)v \end{array}\right] = 0
 $$
 
 Where pressure is closed via the Ideal Gas Law: $p = (\gamma - 1)(E - \frac{1}{2}\rho u^2)$.
