@@ -29,6 +29,13 @@ vec3 Simulation::m_GetSlopeMeasure(const int& t_iCellValue)
 
 void Simulation::m_ReconstructData()
     {
+        std::vector<vec3> t_vConserved = m_vec_dU;
+        
+        for (int i = 0; i < m_vec_dU.size(); i++)
+            {
+                m_vec_dU[i] = m_GetPrimitives(t_vConserved[i]);
+            }
+        
         for(int i = 0; i < m_vec_dU.size(); i++)
             {
                 m_vec_LeftReconstructed[i]  = m_vec_dU[i];
@@ -44,6 +51,14 @@ void Simulation::m_ReconstructData()
                 m_vec_LeftReconstructed[i] = m_vec_dU[i] - (1.0/2.0)*l_vLimiter*l_vDeltaI;
                 m_vec_RightReconstructed[i] = m_vec_dU[i] + (1.0/2.0)*l_vLimiter*l_vDeltaI;
             }
+        
+        for (int i = 0; i < m_vec_dU.size(); i++)
+            {
+                m_vec_LeftReconstructed[i]  = m_GetConserved(m_vec_LeftReconstructed[i]);
+                m_vec_RightReconstructed[i] = m_GetConserved(m_vec_RightReconstructed[i]);
+            }
+        
+        m_vec_dU = t_vConserved;
     }
     
 void Simulation::m_GetReconstructedFluxes()

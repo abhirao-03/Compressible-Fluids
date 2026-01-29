@@ -144,6 +144,7 @@ class Simulation
         double GetEnergy(const double& u_dDensity, const double& u_dVelocity, const double& u_dPressure);
 
         vec3 m_GetPrimitives(const vec3& f_vec3_U);
+        vec3 m_GetConserved(const vec3& f_vec3_P);
         vec3 m_GetSlopeLimitingR(const int& l_iIterValue);
         vec3 m_GetSlopeMeasure(const int& t_iCellValue);
 

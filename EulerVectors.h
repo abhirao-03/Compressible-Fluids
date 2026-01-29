@@ -101,7 +101,10 @@ inline vec3 operator/(const vec3& u_vVector1, const vec3& u_vVcetor2)
 
 inline vec3 operator/(const double& u_dScalar, const vec3& u_vVector)
     {
-        return (1/u_dScalar) * u_vVector;
+        return vec3(u_dScalar / u_vVector[0], 
+                u_dScalar / u_vVector[1], 
+                u_dScalar / u_vVector[2]);
+
     }
 
 

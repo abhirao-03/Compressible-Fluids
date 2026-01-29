@@ -20,6 +20,18 @@ vec3 Simulation::m_GetPrimitives(const vec3& f_vec3_U)
         return vec3(density, velocity, pressure);
     }
 
+vec3 Simulation::m_GetConserved(const vec3& f_vec3_P)
+{
+    double rho = f_vec3_P[0];
+    double u   = f_vec3_P[1];
+    double P   = f_vec3_P[2];
+
+    double momentum = rho * u;
+    double energy = P / (m_dGamma - 1.0) + 0.5 * rho * u * u;
+
+    return vec3(rho, momentum, energy);
+}
+
 double Simulation::GetEnergy(const double& u_dDensity, const double& u_dVelocity, const double& u_dPressure)
     {
         return u_dPressure/(m_dGamma - 1.0) + (1.0/2.0) * (u_dDensity) * (pow(u_dVelocity, 2.0));

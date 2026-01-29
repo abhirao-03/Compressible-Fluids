@@ -26,7 +26,39 @@ void Simulation::Evolve()
         SetTimeStep();
         
         double t = m_dTimeStart;
+        int f_dRelaxationIterMax = 200;
+        int f_dRelaxationIter = 0;
+        
+        do 
+            {
+                t += (0.1 / m_dRelaxation) * m_dDeltaT;
+                
+                SetBoundaryConditions();
+                m_ReconstructData();
+                m_EvolveHalfTimeStep();
+                m_GetReconstructedFluxes();
+                
+                std::cout << "# time = " << t << std::endl;
 
+                for (int i = 1; i < m_vec_dU.size() - 1; i++)
+                    {
+                        double x = m_dXStart + (i - m_iNumGhostCells + 0.5) * m_dDeltaX;
+                        
+                        m_vec_dUNext[i] = m_vec_dU[i] - (m_dDeltaT / m_dDeltaX) * (m_vec_dFluxesReconstructed[i] - m_vec_dFluxesReconstructed[i-1]);
+                        
+                        std::cout << x << ' ' << m_vec_dUNext[i] << std::endl;
+                    }
+
+                std::cout << "\n\n";
+
+                m_vec_dU = m_vec_dUNext;
+                
+                ++f_dRelaxationIter;
+                
+                SetTimeStep();
+                
+            } while (f_dRelaxationIter <= f_dRelaxationIterMax);
+            
         do
             {
                 t += m_dDeltaT;
